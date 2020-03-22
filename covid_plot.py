@@ -7,7 +7,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
-parser.add_argument("--log", type=bool, default=True, help="Logarithmic scale for Y axis")
+parser.add_argument("--log", type=bool, nargs="+", default=True, help="Logarithmic scale for Y axis")
 parser.add_argument("--countries", type=str, nargs="+", default=["Russia"], help="List of countries to be plotted.")
 
 args = parser.parse_args()
