@@ -1,6 +1,6 @@
+from __future__ import print_function
 import os
 import sys
-from io import StringIO
 import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
@@ -29,29 +29,31 @@ confirmed = confirmed.drop(columns=['Lat', 'Long', 'Province/State', 'Country/Re
 
 confirmed.columns = pd.to_datetime(confirmed.columns)
 
-countries_set = set(confirmed.index.tolist())
-
+countries = list()
 for country in args.countries:
-    if country not in countries_set:
-        sys.exit(country + ' is not in the set of countries')
-
-countries = list()        
-for country in args.countries:
+    if country not in confirmed.index:
+       print(country + ' is not in the set of countries', file=sys.stderr)
+       continue
     countries.append(confirmed.loc[country])
     if isinstance(countries[-1], pd.DataFrame):
         countries[-1] = countries[-1].sum(axis = 0, skipna = True)
         countries[-1].name = country
     countries[-1] = countries[-1][countries[-1]!=0]
 
-for country in countries:
-    ax = country.plot(marker='o', markersize=2, legend=True)
-ax.set_ylabel('people')       
+if len(countries) == 0:
+    sys.exit(0)
 
-if args.log == True:
+for country in countries:
+    # print country
+    ax = country.plot(marker='o', markersize=2, legend=True)
+    ax.legend()
+
+
+plt.ylabel('people')
+if args.log:
     plt.yscale("log")
 
 plt.title('Confirmed Cases')
 
 plt.grid(True)
-    
 plt.show()
