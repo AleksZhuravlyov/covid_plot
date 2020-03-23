@@ -69,10 +69,6 @@ else:
 
     handles, labels = ax.get_legend_handles_labels()
 
-    handles[-1].color = 'b'
-
-    print(labels)
-
     legend = ax.legend()
     for handle in legend.legendHandles:
         handle.set_linewidth(5.0)
@@ -82,7 +78,7 @@ else:
     if args.log:
         plt.yscale("log")
 
-    plt.title('Confirmed Cases and Deaths (---)')
+    plt.title('Confirmed Cases (—) and Deaths (---)')
 
     plt.grid(True)
 
