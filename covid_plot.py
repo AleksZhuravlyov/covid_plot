@@ -8,6 +8,7 @@ import sqlite3
 
 def process(args, connection):
     cases = pd.read_csv(os.path.join(base_path, cases_file_name))
+    today = pd.read_csv(os.path.join(base_path, today_file_name))
     all_countries = sorted(set(cases['Country_Region'].values.tolist()))
     # filter out unknown countries
     countries = sorted(list(set(all_countries) & set(args.countries)))
@@ -23,15 +24,20 @@ def process(args, connection):
 
     cases['Last_Update'] = pd.to_datetime(cases['Last_Update'])
     cases.to_sql("pandas_cases", connection)
+    today.to_sql("today_cases", connection)
 
     fig, ax = plt.subplots()
     for country in countries:
         # plot country
         cases_time = pd.read_sql_query(
-            f'SELECT * from pandas_cases where Country_Region in (?) order by Last_Update ASC',
+            f'SELECT Last_Update, Confirmed, Deaths from pandas_cases where Country_Region in (?) order by Last_Update ASC',
             connection, params=[country])
+        cases_today = pd.read_sql_query(
+            f'SELECT Last_Update, Confirmed, Deaths from today_cases where Country_Region in (?) order by Last_Update ASC',
+            connection, params=[country])
+        cases_time = cases_time.append(cases_today)
         color = next(ax._get_lines.prop_cycler)['color']
-        cases_time['Last_Update'] = pd.to_datetime(cases_time['Last_Update'])
+        cases_time['Last_Update'] = pd.to_datetime(cases_time['Last_Update']).dt.normalize()
         cases_time.plot(x='Last_Update', y='Confirmed', linestyle='-', color=color, ax=ax, label=country)
         cases_time.plot(x='Last_Update', y='Deaths', linestyle='--', label='_nolegend_', color=color, ax=ax)
 
@@ -63,6 +69,7 @@ if __name__ == '__main__':
     cwd = os.getcwd()
     base_path = "COVID-19/data"
     cases_file_name = "cases_time.csv"
+    today_file_name = "cases_country.csv"
 
     if os.path.isdir(base_path):
         os.chdir(base_path)
