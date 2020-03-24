@@ -4,4 +4,6 @@ Draws plots of the number of confirmed cases and deaths from COVID-19, per count
 # Usage examples
 ```python3 covid_plot.py --list```
 
-```python3 covid_plot.py --log --countries Italy France```
+```python3 covid_plot.py --countries Italy France```
+
+```python3 covid_plot.py --nonlog --countries Italy France```
