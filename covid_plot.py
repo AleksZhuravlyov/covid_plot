@@ -3,83 +3,78 @@ import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
+import sqlite3
+
 
 parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
-parser.add_argument('--log', action='store_true', help='set logarithmic scale for Y axis')
+parser.add_argument('--log', default=True, action='store_true', help='set logarithmic scale for Y axis')
 parser.add_argument('--list', action='store_true', help='get list of available countries')
 parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                     help='set list of countries to be plotted')
 
 args = parser.parse_args()
 
-base_path = "COVID-19/csse_covid_19_data/csse_covid_19_time_series"
-confirmed_file_name = "time_series_19-covid-Confirmed.csv"
-deaths_file_name = "time_series_19-covid-Deaths.csv"
+cwd = os. getcwd()
+base_path = "COVID-19/data"
+cases_file_name = "cases_time.csv"
 
 if os.path.isdir(base_path):
     os.chdir(base_path)
     os.system("git pull")
-    os.chdir('../../../')
+    os.chdir(cwd)
 else:
     os.system("git clone https://github.com/CSSEGISandData/COVID-19")
+    os.chdir('COVID-19')
+    os.system("git checkout web-data")
+    os.chdir("..")
 
-confirmed = pd.read_csv(os.path.join(base_path, confirmed_file_name))
-deaths = pd.read_csv(os.path.join(base_path, deaths_file_name))
+try:
+    conn = sqlite3.connect(':memory:')
+except sqlite3.Error as e:
+    print(e)
+    sys.exit(-2)
 
-confirmed.index = confirmed['Country/Region']
-deaths.index = deaths['Country/Region']
+cases = pd.read_csv(os.path.join(base_path, cases_file_name))
+all_countries = sorted(set(cases['Country_Region'].values.tolist()))
 
-drop_columns = ['Lat', 'Long', 'Province/State', 'Country/Region']
-confirmed = confirmed.drop(columns=drop_columns)
-deaths = deaths.drop(columns=drop_columns)
+countries = sorted(list(set(all_countries) & set(args.countries)))
 
-confirmed.columns = pd.to_datetime(confirmed.columns)
-deaths.columns = pd.to_datetime(deaths.columns)
+if len(countries) == 0 :
+    print("No known countries were specified. Should be in ", file=sys.stderr)
+    print(all_countries, file=sys.stderr)
+    sys.exit(-1)
 
 if args.list:
-    print(sorted(set(confirmed.index.tolist())))
+    print(all_countries)
+    sys.exit(0)
 
-else:
-    countries = list()
-    for country in args.countries:
-        if country not in confirmed.index:
-            print(country + ' is not in the set of countries', file=sys.stderr)
-            continue
-        countries.append({'confirmed': confirmed.loc[country], 'deaths': deaths.loc[country]})
+cases['Last_Update'] = pd.to_datetime(cases['Last_Update'])
+cases.to_sql("pandas_cases", conn)
 
-        if isinstance(countries[-1]['confirmed'], pd.DataFrame):
-            countries[-1]['confirmed'] = countries[-1]['confirmed'].sum(axis=0, skipna=True)
-            countries[-1]['confirmed'].name = country
-        countries[-1]['confirmed'] = countries[-1]['confirmed'][countries[-1]['confirmed'] != 0]
 
-        if isinstance(countries[-1]['deaths'], pd.DataFrame):
-            countries[-1]['deaths'] = countries[-1]['deaths'].sum(axis=0, skipna=True)
-            countries[-1]['deaths'].name = country
-        countries[-1]['deaths'] = countries[-1]['deaths'][countries[-1]['deaths'] != 0]
+fig, ax = plt.subplots()
+for country in countries:
+    # plot country
+    ddd = pd.read_sql_query(f"SELECT * from pandas_cases where Country_Region in ({','.join(['?']*len([country]))}) order by Country_Region ASC, Last_Update ASC", conn, params=[country])
+    color = next(ax._get_lines.prop_cycler)['color']
+    ddd['Last_Update'] = pd.to_datetime(ddd['Last_Update'])
+    ddd.plot(x='Last_Update', y='Confirmed', linestyle='-', color=color,ax=ax, label=country)
+    ddd.plot(x='Last_Update', y='Deaths', linestyle='--', label='_nolegend_', color=color,ax=ax)
 
-    if len(countries) == 0:
-        sys.exit(0)
 
-    fig, ax = plt.subplots()
-    for country in countries:
-        # plot country
-        color = next(ax._get_lines.prop_cycler)['color']
-        country['confirmed'].plot(linestyle='-', color=color)
-        country['deaths'].plot(linestyle='--', label='_nolegend_', color=color)
+handles, labels = ax.get_legend_handles_labels()
+legend = ax.legend()
+for handle in legend.legendHandles:
+    handle.set_linewidth(5.0)
 
-    handles, labels = ax.get_legend_handles_labels()
+plt.ylabel('people')
 
-    legend = ax.legend()
-    for handle in legend.legendHandles:
-        handle.set_linewidth(5.0)
+if args.log:
+    plt.yscale("log")
 
-    plt.ylabel('people')
+plt.title('Confirmed Cases (—) and Deaths (---)')
 
-    if args.log:
-        plt.yscale("log")
+plt.grid(True)
 
-    plt.title('Confirmed Cases (—) and Deaths (---)')
 
-    plt.grid(True)
-
-    plt.show()
+plt.show()
