@@ -41,7 +41,7 @@ def process(args, conn):
 
     plt.ylabel('people')
 
-    if args.log:
+    if not args.nonlog:
         plt.yscale("log")
 
     plt.title('Confirmed Cases (—) and Deaths (---)')
@@ -53,7 +53,7 @@ def process(args, conn):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
-    parser.add_argument('--log', default=True, action='store_true', help='set logarithmic scale for Y axis')
+    parser.add_argument('--nonlog', default=False, action='store_true', help='set logarithmic scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'], help='set list of countries to be plotted')
 
