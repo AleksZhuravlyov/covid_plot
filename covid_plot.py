@@ -50,37 +50,38 @@ def process(args, conn):
 
     plt.show()
 
-parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
-parser.add_argument('--log', default=True, action='store_true', help='set logarithmic scale for Y axis')
-parser.add_argument('--list', action='store_true', help='get list of available countries')
-parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
-                    help='set list of countries to be plotted')
 
-args = parser.parse_args()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
+    parser.add_argument('--log', default=True, action='store_true', help='set logarithmic scale for Y axis')
+    parser.add_argument('--list', action='store_true', help='get list of available countries')
+    parser.add_argument('--countries', type=str, nargs='+', default=['Russia'], help='set list of countries to be plotted')
 
-cwd = os. getcwd()
-base_path = "COVID-19/data"
-cases_file_name = "cases_time.csv"
+    args = parser.parse_args()
 
-if os.path.isdir(base_path):
-    os.chdir(base_path)
-    os.system("git pull")
-    os.chdir(cwd)
-else:
-    os.system("git clone https://github.com/CSSEGISandData/COVID-19")
-    os.chdir('COVID-19')
-    os.system("git checkout web-data")
-    os.chdir("..")
+    cwd = os. getcwd()
+    base_path = "COVID-19/data"
+    cases_file_name = "cases_time.csv"
 
-try:
-    # open in-memory database
-    conn = sqlite3.connect(':memory:')
-    process(args, conn)
-except sqlite3.Error as e:
-    print(e, file=sys.stderr)
-finally:
-    if conn:
-        conn.close()
+    if os.path.isdir(base_path):
+        os.chdir(base_path)
+        os.system("git pull")
+        os.chdir(cwd)
+    else:
+        os.system("git clone https://github.com/CSSEGISandData/COVID-19")
+        os.chdir('COVID-19')
+        os.system("git checkout web-data")
+        os.chdir("..")
+
+    try:
+        # open in-memory database
+        conn = sqlite3.connect(':memory:')
+        process(args, conn)
+    except sqlite3.Error as e:
+        print(e, file=sys.stderr)
+    finally:
+        if conn:
+            conn.close()
 
 
 
