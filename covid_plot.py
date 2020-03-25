@@ -13,10 +13,10 @@ def func(x, a, b, c, d):
 
 
 def forecast(args, cases_time, ax, color):
-    backward = np.timedelta64(args.forec[1], 'D')
-    forward = np.timedelta64(args.forec[0], 'D')
+    backward = np.timedelta64(args.forec_params[1], 'D')
+    forward = np.timedelta64(args.forec_params[0], 'D')
     if not args.nonforec_deaths:
-        deaths_lag = np.timedelta64(args.forec[2], 'D')
+        deaths_lag = np.timedelta64(args.forec_params[2], 'D')
 
     # import time, confirmed cases and deaths form pandas to numpy
     time = cases_time.Last_Update.to_numpy()
@@ -49,10 +49,10 @@ def forecast(args, cases_time, ax, color):
 
     # employ numpy curve fitting for confirmed cases and deaths forecast
     confirmed_popt, confirmed_pcov = curve_fit(func, time_confirmed.astype('datetime64[D]').astype(int), confirmed,
-                                               maxfev=int(1e+7))
+                                               maxfev=int(1.e+9))
     if not args.nonforec_deaths:
         deaths_popt, deaths_pcov = curve_fit(func, time_deaths.astype('datetime64[D]').astype(int), deaths,
-                                             maxfev=int(1e+7))
+                                             maxfev=int(1.e+9))
 
     # plot forecast of confirmed cases and deaths
     ax.plot(time_forecast_confirmed.astype('datetime64[ns]'),
@@ -100,7 +100,7 @@ def process(args, connection):
         cases_time.plot(x='Last_Update', y='Confirmed', linestyle='-', lw=2.1, color=color, ax=ax, label=country)
         cases_time.plot(x='Last_Update', y='Deaths', linestyle='--', lw=2.1, color=color, ax=ax, label='_nolegend_')
 
-        if not args.nonforec:
+        if args.forec:
             forecast(args, cases_time, ax, color)
 
     legend = ax.legend()
@@ -125,9 +125,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
-    parser.add_argument('--forec', type=str, nargs='+', default=['7', '20', '10'],
+    parser.add_argument('--forec_params', type=str, nargs='+', default=['7', '20', '10'],
                         help='set forward, backward and deaths lag days for forecast')
-    parser.add_argument('--nonforec', default=False, action='store_true', help='do not forecast at all')
+    parser.add_argument('--forec', default=False, action='store_true', help='do forecast')
     parser.add_argument('--nonforec_deaths', default=False, action='store_true', help='do not forecast deaths')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
