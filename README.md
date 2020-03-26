@@ -6,6 +6,8 @@ Draws plots of the number of confirmed cases and deaths from coronavirus disease
 
 ```python3 covid_plot.py --countries Italy France```
 
+```python3 covid_plot.py --countries Italy France --total```
+
 ```python3 covid_plot.py --countries Italy France --nonlog```
 
 ```python3 covid_plot.py --countries Italy France --forec_confirmed exp 7 20 --from_date 2020-02-01```

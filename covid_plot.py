@@ -90,6 +90,17 @@ def process(args, connection, base_path, cases_file, today_file):
     cases.to_sql("pandas_cases", connection)
     today.to_sql("today_cases", connection)
 
+    if args.total:
+        cases_all = pd.read_sql_query(
+            f'SELECT Last_Update, Sum(Confirmed) as Confirmed, Sum(Deaths) as Deaths from pandas_cases \
+             group by Last_Update order by Last_Update ASC',
+            connection)
+        cases_all = cases_all.append(
+            pd.read_sql_query(
+            f'SELECT Last_Update, Sum(Confirmed) as Confirmed, Sum(Deaths) as Deaths from today_cases \
+              group by CAST(Last_Update AS DATE) order by CAST(Last_Update AS DATE) ASC',
+            connection))
+
     fig, ax = plt.subplots()
     for country in countries:
         # plot country
@@ -122,6 +133,12 @@ def process(args, connection, base_path, cases_file, today_file):
                                             cases_time=cases_time, field_name='Deaths', ax=ax, color=color,
                                             last_day=args.last_day)
 
+    if args.total:
+        color = next(ax._get_lines.prop_cycler)['color']
+        cases_all['Last_Update'] = pd.to_datetime(cases_all['Last_Update']).dt.normalize()
+        cases_all.plot(x='Last_Update', y='Confirmed', linestyle='-', lw=2.1, color=color, ax=ax, label='World')
+        cases_all.plot(x='Last_Update', y='Deaths', linestyle='--', lw=2.1, color=color, ax=ax, label='')
+
     legend = ax.legend()
     for handle in legend.legendHandles:
         handle.set_linewidth(5.0)
@@ -129,7 +146,8 @@ def process(args, connection, base_path, cases_file, today_file):
     plt.ylabel('people')
     plt.xlabel('')
     ax.set_ylim(ymin=1)
-    ax.set_xlim(xmin=args.from_date)
+    if args.from_date:
+        ax.set_xlim(xmin=args.from_date)
     if args.forec_confirmed and args.forec_deaths:
         if date_forecast_confirmed > date_forecast_deaths:
             ax.set_xlim(xmax=date_forecast_confirmed)
@@ -163,8 +181,9 @@ if __name__ == '__main__':
                         deaths: type n n')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
-    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default="2020-01-01",
+    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default=None,
                         help='set init data for plot: Y-m-d')
+    parser.add_argument('--total', default=False, action='store_true', help='Plot sum over all countries.')
 
     args = parser.parse_args()
 
