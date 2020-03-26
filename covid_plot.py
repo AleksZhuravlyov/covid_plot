@@ -38,7 +38,7 @@ def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
     date_backward = date_current - backward
 
     time_forecast = np.arange(date_backward, date_forward, dtype='datetime64[D]')
-    ax.set_xlim(xmin=date_init, xmax=date_forward)  # TODO fix it
+    ax.set_xlim(xmax=date_forward)
 
     # set time frame for curve fitting for confirmed cases
     backward_condition = time > date_backward
@@ -59,8 +59,9 @@ def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
     if field_name == 'Deaths':
         linestyle = '--'
 
-    forecast_value.plot(x='Last_Update', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax,
-                        label='')
+    forecast_value.plot(x='Last_Update', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax, label='')
+
+    return date_forward
 
 
 def process(args, connection, base_path, cases_file, today_file):
@@ -101,17 +102,17 @@ def process(args, connection, base_path, cases_file, today_file):
 
         # forecast and plot confirmed cases
         if args.forec_confirmed[0] != '':
-            forecast(func_type=args.forec_confirmed[0],
-                     forward=np.timedelta64(int(args.forec_confirmed[1]), 'D'),
-                     backward=np.timedelta64(int(args.forec_confirmed[2]), 'D'),
-                     cases_time=cases_time, field_name='Confirmed', ax=ax, color=color)
+            date_forecast_confirmed = forecast(func_type=args.forec_confirmed[0],
+                                               forward=np.timedelta64(int(args.forec_confirmed[1]), 'D'),
+                                               backward=np.timedelta64(int(args.forec_confirmed[2]), 'D'),
+                                               cases_time=cases_time, field_name='Confirmed', ax=ax, color=color)
 
         # forecast and plot deaths
         if args.forec_deaths[0] != '':
-            forecast(func_type=args.forec_deaths[0],
-                     forward=np.timedelta64(int(args.forec_deaths[1]), 'D'),
-                     backward=np.timedelta64(int(args.forec_deaths[2]), 'D'),
-                     cases_time=cases_time, field_name='Deaths', ax=ax, color=color)
+            date_forecast_deaths = forecast(func_type=args.forec_deaths[0],
+                                            forward=np.timedelta64(int(args.forec_deaths[1]), 'D'),
+                                            backward=np.timedelta64(int(args.forec_deaths[2]), 'D'),
+                                            cases_time=cases_time, field_name='Deaths', ax=ax, color=color)
 
     legend = ax.legend()
     for handle in legend.legendHandles:
@@ -121,6 +122,10 @@ def process(args, connection, base_path, cases_file, today_file):
     plt.xlabel('')
     ax.set_ylim(ymin=1)
     ax.set_xlim(xmin=args.from_date)
+    if date_forecast_confirmed > date_forecast_deaths:
+        ax.set_xlim(xmax=date_forecast_confirmed)
+    else:
+        ax.set_xlim(xmax=date_forecast_deaths)
 
     if not args.nonlog:
         plt.yscale('log')
@@ -137,12 +142,13 @@ if __name__ == '__main__':
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[''],
-                        help='set function type (exp or poly), forward and backward days for forecast confirmed cases')
+                        help='set function type (exp or poly), forward and backward days for forecast confirmed cases: type n n')
     parser.add_argument('--forec_deaths', type=str, nargs='+', default=[''],
-                        help='set function type (exp or poly), forward and backward days for forecast deaths')
+                        help='set function type (exp or poly), forward and backward days for forecast deaths: type n n')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
-    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default="2020-01-01")
+    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default="2020-01-01",
+                        help='set init data for plot: Y-m-d')
 
     args = parser.parse_args()
 
