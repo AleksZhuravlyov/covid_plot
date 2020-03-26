@@ -1,5 +1,5 @@
 # covid_plot
-Draws plots of the number of confirmed cases and deaths from COVID-19, per country.
+Draws plots of the number of confirmed cases and deaths from coronavirus disease (COVID-19), per country.
 
 # Usage examples
 ```python3 covid_plot.py --list```

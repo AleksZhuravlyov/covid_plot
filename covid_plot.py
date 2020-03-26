@@ -9,20 +9,26 @@ from scipy.optimize import curve_fit
 import datetime
 
 
-def func_exp(x, a, b, c, d):
-    return (a * x + b) * np.exp(c + d / x)
+def func_linear(x, a, b):
+    return a * x + b
 
 
 def func_poly(x, a, b, c, d):
-    return a + b * x + c * x * x + d * x * x * x
+    return a * x * x * x + b * x * x + c * x + d
+
+
+def func_covid(x, a, b, c, d):
+    return (a * x + b) * np.exp(c / x + d)
 
 
 def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
     # set function type for curve fitting
-    if func_type == 'exp':
-        func = func_exp
+    if func_type == 'linear':
+        func = func_linear
     elif func_type == 'poly':
         func = func_poly
+    elif func_type == 'covid':
+        func = func_covid
     else:
         print("No such function type, use exp or poly", file=sys.stderr)
         sys.exit(-1)
@@ -47,7 +53,7 @@ def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
     value = value[backward_condition]
 
     # employ numpy curve fitting for forecast
-    popt, pcov = curve_fit(func, time_fitting.astype('datetime64[D]').astype(int), value, maxfev=int(1.e+9))
+    popt, pcov = curve_fit(func, time_fitting.astype('datetime64[D]').astype(float), value, maxfev=int(1.e+9))
 
     # plot forecast
     forecast_value = pd.DataFrame()
@@ -139,13 +145,19 @@ def process(args, connection, base_path, cases_file, today_file):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
+    parser = argparse.ArgumentParser(description='COVID-19 disease daily plotting script',
+                                     epilog='Forecast works mostly under manual control, but works and\
+                                     the corresponding fitting functions are as follows: linear=a*x+b,\
+                                     poly=a*x^3+b*x^2+c*x+d and covid=(a*x+b)*exp(c/x+d).', prog='covid_plot')
+
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
-                        help='set function type (exp or poly), forward and backward days for forecast confirmed cases: type n n')
+                        help='set function type (linear, poly or covid), forward and backward days for forecast\
+                        confirmed cases: type n n')
     parser.add_argument('--forec_deaths', type=str, nargs='+', default=[],
-                        help='set function type (exp or poly), forward and backward days for forecast deaths: type n n')
+                        help='set function type (linear, poly or covid), forward and backward days for forecast\
+                        deaths: type n n')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
     parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default="2020-01-01",
