@@ -135,9 +135,9 @@ if __name__ == '__main__':
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[''],
-                        help='set forward, backward days and function type (exp, poly) for forecast confirmed cases')
+                        help='set function type (exp or poly), forward and backward days for forecast confirmed cases')
     parser.add_argument('--forec_deaths', type=str, nargs='+', default=[''],
-                        help='set forward, backward days and function type (exp, poly) for forecast deaths')
+                        help='set function type (exp or poly), forward and backward days for forecast deaths')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
 
