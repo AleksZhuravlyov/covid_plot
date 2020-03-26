@@ -6,6 +6,7 @@ import argparse
 import sqlite3
 import numpy as np
 from scipy.optimize import curve_fit
+import datetime
 
 
 def func_exp(x, a, b, c, d):
@@ -119,6 +120,7 @@ def process(args, connection, base_path, cases_file, today_file):
     plt.ylabel('people')
     plt.xlabel('')
     ax.set_ylim(ymin=1)
+    ax.set_xlim(xmin=args.from_date)
 
     if not args.nonlog:
         plt.yscale('log')
@@ -140,6 +142,7 @@ if __name__ == '__main__':
                         help='set function type (exp or poly), forward and backward days for forecast deaths')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
+    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default="2020-01-01")
 
     args = parser.parse_args()
 
