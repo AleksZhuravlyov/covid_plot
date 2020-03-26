@@ -21,7 +21,7 @@ def func_covid(x, a, b, c, d):
     return (a * x + b) * np.exp(c / x + d)
 
 
-def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
+def forecast(func_type, forward, backward, cases_time, field_name, ax, color, last_day):
     # set function type for curve fitting
     if func_type == 'linear':
         func = func_linear
@@ -38,7 +38,6 @@ def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
     value = cases_time[field_name].to_numpy()
 
     # trim data for particular purposes of forecast
-    date_init = time[0]
     date_current = time[-1]
     date_forward = date_current + forward
     date_backward = date_current - backward
@@ -48,7 +47,8 @@ def forecast(func_type, forward, backward, cases_time, field_name, ax, color):
 
     # set time frame for curve fitting for confirmed cases
     backward_condition = time > date_backward
-    backward_condition[-1] = False  # the last day is not use since can be non filled
+    if not last_day:
+        backward_condition[-1] = False  # the last day is not use since can be non filled
     time_fitting = time[backward_condition]
     value = value[backward_condition]
 
@@ -111,14 +111,16 @@ def process(args, connection, base_path, cases_file, today_file):
             date_forecast_confirmed = forecast(func_type=args.forec_confirmed[0],
                                                forward=np.timedelta64(int(args.forec_confirmed[1]), 'D'),
                                                backward=np.timedelta64(int(args.forec_confirmed[2]), 'D'),
-                                               cases_time=cases_time, field_name='Confirmed', ax=ax, color=color)
+                                               cases_time=cases_time, field_name='Confirmed', ax=ax, color=color,
+                                               last_day=args.last_day)
 
         # forecast and plot deaths
         if args.forec_deaths:
             date_forecast_deaths = forecast(func_type=args.forec_deaths[0],
                                             forward=np.timedelta64(int(args.forec_deaths[1]), 'D'),
                                             backward=np.timedelta64(int(args.forec_deaths[2]), 'D'),
-                                            cases_time=cases_time, field_name='Deaths', ax=ax, color=color)
+                                            cases_time=cases_time, field_name='Deaths', ax=ax, color=color,
+                                            last_day=args.last_day)
 
     legend = ax.legend()
     for handle in legend.legendHandles:
@@ -152,6 +154,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
+    parser.add_argument('--last_day', default=False, action='store_true', help='use the last day for forecast')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
                         help='set function type (linear, poly or covid), forward and backward days for forecast\
                         confirmed cases: type n n')
