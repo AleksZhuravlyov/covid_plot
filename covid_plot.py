@@ -101,14 +101,14 @@ def process(args, connection, base_path, cases_file, today_file):
         cases_time.plot(x='Last_Update', y='Deaths', linestyle='--', lw=2.1, color=color, ax=ax, label='')
 
         # forecast and plot confirmed cases
-        if args.forec_confirmed[0] != '':
+        if args.forec_confirmed:
             date_forecast_confirmed = forecast(func_type=args.forec_confirmed[0],
                                                forward=np.timedelta64(int(args.forec_confirmed[1]), 'D'),
                                                backward=np.timedelta64(int(args.forec_confirmed[2]), 'D'),
                                                cases_time=cases_time, field_name='Confirmed', ax=ax, color=color)
 
         # forecast and plot deaths
-        if args.forec_deaths[0] != '':
+        if args.forec_deaths:
             date_forecast_deaths = forecast(func_type=args.forec_deaths[0],
                                             forward=np.timedelta64(int(args.forec_deaths[1]), 'D'),
                                             backward=np.timedelta64(int(args.forec_deaths[2]), 'D'),
@@ -122,10 +122,11 @@ def process(args, connection, base_path, cases_file, today_file):
     plt.xlabel('')
     ax.set_ylim(ymin=1)
     ax.set_xlim(xmin=args.from_date)
-    if date_forecast_confirmed > date_forecast_deaths:
-        ax.set_xlim(xmax=date_forecast_confirmed)
-    else:
-        ax.set_xlim(xmax=date_forecast_deaths)
+    if args.forec_confirmed and args.forec_deaths:
+        if date_forecast_confirmed > date_forecast_deaths:
+            ax.set_xlim(xmax=date_forecast_confirmed)
+        else:
+            ax.set_xlim(xmax=date_forecast_deaths)
 
     if not args.nonlog:
         plt.yscale('log')
@@ -141,9 +142,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="CoViD-2019 daily plotting script")
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available countries')
-    parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[''],
+    parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
                         help='set function type (exp or poly), forward and backward days for forecast confirmed cases: type n n')
-    parser.add_argument('--forec_deaths', type=str, nargs='+', default=[''],
+    parser.add_argument('--forec_deaths', type=str, nargs='+', default=[],
                         help='set function type (exp or poly), forward and backward days for forecast deaths: type n n')
     parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
                         help='set list of countries to be plotted')
