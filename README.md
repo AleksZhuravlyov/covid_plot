@@ -8,6 +8,6 @@ Draws plots of the number of confirmed cases and deaths from COVID-19, per count
 
 ```python3 covid_plot.py --countries Italy France --nonlog```
 
-```python3 covid_plot.py --countries Italy France --forec_confirmed exp 7 20```
+```python3 covid_plot.py --countries Italy France --forec_confirmed exp 7 20 --from_date 2020-02-01```
 
 ```python3 covid_plot.py --countries Italy France --nonlog --forec_confirmed exp 7 20 --forec_deaths poly 5 10```
