@@ -3,7 +3,6 @@ import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
-import sqlite3
 import numpy as np
 from scipy.optimize import curve_fit
 import datetime
@@ -21,8 +20,10 @@ def func_covid(x, a, b, c, d):
     return (a * x + b) * np.exp(c / x + d)
 
 
-def forecast(func_type, forward, backward, cases_time, field_name, ax, color, last_day):
+def forecast(forec_args, cases, field_name, ax, color, last_day):
     # set function type for curve fitting
+
+    func_type = forec_args[0]
     if func_type == 'linear':
         func = func_linear
     elif func_type == 'poly':
@@ -33,111 +34,107 @@ def forecast(func_type, forward, backward, cases_time, field_name, ax, color, la
         print("No such function type, use exp or poly", file=sys.stderr)
         sys.exit(-1)
 
+    forward = np.timedelta64(int(forec_args[1]), 'D')
+    backward = np.timedelta64(int(forec_args[2]), 'D')
+
     # import time, confirmed cases and deaths form pandas to numpy
-    time = cases_time.Last_Update.to_numpy()
-    value = cases_time[field_name].to_numpy()
+    date = cases.Date.to_numpy()
+    value = cases[field_name].to_numpy()
 
     # trim data for particular purposes of forecast
-    date_current = time[-1]
+    date_current = date[-1]
     date_forward = date_current + forward
     date_backward = date_current - backward
 
-    time_forecast = np.arange(date_backward, date_forward, dtype='datetime64[D]')
+    date_range_forecast = np.arange(date_backward, date_forward, dtype='datetime64[D]')
     ax.set_xlim(xmax=date_forward)
 
     # set time frame for curve fitting for confirmed cases
-    backward_condition = time > date_backward
+    backward_condition = date > date_backward
     if not last_day:
         backward_condition[-1] = False  # the last day is not use since can be non filled
-    time_fitting = time[backward_condition]
+    date_range_fitting = date[backward_condition]
     value = value[backward_condition]
 
     # employ numpy curve fitting for forecast
-    popt, pcov = curve_fit(func, time_fitting.astype('datetime64[D]').astype(float), value, maxfev=int(1.e+9))
+    popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float), value, maxfev=int(1.e+9))
 
     # plot forecast
     forecast_value = pd.DataFrame()
-    forecast_value['Last_Update'] = time_forecast.astype('datetime64[ns]')
-    forecast_value[field_name] = func(time_forecast.astype('datetime64[D]').astype(int), *popt)
-    forecast_value['Last_Update'] = forecast_value['Last_Update'].dt.normalize()
+    forecast_value['Date'] = date_range_forecast.astype('datetime64[ns]')
+    forecast_value[field_name] = func(date_range_forecast.astype('datetime64[D]').astype(int), *popt)
+    forecast_value.Date = forecast_value.Date.dt.normalize()
 
     linestyle = '-'
     if field_name == 'Deaths':
         linestyle = '--'
 
-    forecast_value.plot(x='Last_Update', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax, label='')
+    forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax, label='')
 
-    return date_forward
+    if np.datetime64(int(ax.get_xlim()[1]), 'D') < date_forward:
+        ax.set_xlim(xmax=date_forward)
 
 
-def process(args, connection, base_path, cases_file, today_file):
+def preprocess(args, base_path, cases_file, cases_today_file):
+    rename_dict = {'Country_Region': 'Region', 'Last_Update': 'Date'}
+    drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered']
+    drop_list_cases = ['Active', 'Delta_Confirmed', 'Delta_Recovered']
+
+    cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
+    cases_today.rename(columns=rename_dict, inplace=True)
+    cases_today = cases_today.drop(columns=drop_list_cases_today)
+
     cases = pd.read_csv(os.path.join(base_path, cases_file))
-    today = pd.read_csv(os.path.join(base_path, today_file))
-    all_countries = sorted(set(cases['Country_Region'].values.tolist()))
-    # filter out unknown countries
-    countries = sorted(list(set(all_countries) & set(args.countries)))
+    cases.rename(columns=rename_dict, inplace=True)
+    cases = cases.drop(columns=drop_list_cases)
 
-    if len(countries) == 0:
-        print("No known countries were specified. Should be in ", file=sys.stderr)
-        print(all_countries, file=sys.stderr)
+    cases = cases.append(cases_today, ignore_index=True, sort=True)
+    cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
+    cases = cases.sort_values(by=['Region', 'Date'])
+
+    if 'World' in set(args.regions):
+        world = cases.groupby(['Date']).sum()
+        world['Region'] = 'World'
+        world['Date'] = world.index
+        cases = cases.append(world, ignore_index=True, sort=True)
+
+    return cases
+
+
+def process(args, cases):
+    regions_all = sorted(set(cases['Region'].values.tolist()))
+    regions = sorted(list(set(regions_all) & set(args.regions)))
+
+    if len(regions) == 0:
+        print("No known regions were specified. Should be in ", file=sys.stderr)
+        print(regions_all, file=sys.stderr)
         sys.exit(-1)
 
     if args.list:
-        print(all_countries)
+        print(['World'])
+        print(regions_all)
         sys.exit(0)
 
-    cases['Last_Update'] = pd.to_datetime(cases['Last_Update'])
-    cases.to_sql("pandas_cases", connection)
-    today.to_sql("today_cases", connection)
-
-    if args.total:
-        cases_all = pd.read_sql_query(
-            f'SELECT Last_Update, Sum(Confirmed) as Confirmed, Sum(Deaths) as Deaths from pandas_cases \
-             group by Last_Update order by Last_Update ASC',
-            connection)
-        cases_all = cases_all.append(
-            pd.read_sql_query(
-            f'SELECT Last_Update, Sum(Confirmed) as Confirmed, Sum(Deaths) as Deaths from today_cases \
-              group by CAST(Last_Update AS DATE) order by CAST(Last_Update AS DATE) ASC',
-            connection))
-
     fig, ax = plt.subplots()
-    for country in countries:
-        # plot country
+    for region in regions:
+        # plot region
 
-        cases_time = pd.read_sql_query(
-            f'SELECT Last_Update, Confirmed, Deaths from pandas_cases where Country_Region in (?) order by Last_Update ASC',
-            connection, params=[country])
-        cases_today = pd.read_sql_query(
-            f'SELECT Last_Update, Confirmed, Deaths from today_cases where Country_Region in (?) order by Last_Update ASC',
-            connection, params=[country])
-        cases_time = cases_time.append(cases_today)
         color = next(ax._get_lines.prop_cycler)['color']
-        cases_time['Last_Update'] = pd.to_datetime(cases_time['Last_Update']).dt.normalize()
-        cases_time.plot(x='Last_Update', y='Confirmed', linestyle='-', lw=2.1, color=color, ax=ax, label=country)
-        cases_time.plot(x='Last_Update', y='Deaths', linestyle='--', lw=2.1, color=color, ax=ax, label='')
+
+        cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
+                                              linestyle='-', lw=2.1, color=color, ax=ax, label=region)
+        cases[cases['Region'] == region].plot(x='Date', y='Deaths',
+                                              linestyle='--', lw=2.1, color=color, ax=ax, label='')
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
-            date_forecast_confirmed = forecast(func_type=args.forec_confirmed[0],
-                                               forward=np.timedelta64(int(args.forec_confirmed[1]), 'D'),
-                                               backward=np.timedelta64(int(args.forec_confirmed[2]), 'D'),
-                                               cases_time=cases_time, field_name='Confirmed', ax=ax, color=color,
-                                               last_day=args.last_day)
+            forecast(args.forec_confirmed, cases[cases['Region'] == region],
+                     field_name='Confirmed', ax=ax, color=color, last_day=args.last_day)
 
         # forecast and plot deaths
         if args.forec_deaths:
-            date_forecast_deaths = forecast(func_type=args.forec_deaths[0],
-                                            forward=np.timedelta64(int(args.forec_deaths[1]), 'D'),
-                                            backward=np.timedelta64(int(args.forec_deaths[2]), 'D'),
-                                            cases_time=cases_time, field_name='Deaths', ax=ax, color=color,
-                                            last_day=args.last_day)
-
-    if args.total:
-        color = next(ax._get_lines.prop_cycler)['color']
-        cases_all['Last_Update'] = pd.to_datetime(cases_all['Last_Update']).dt.normalize()
-        cases_all.plot(x='Last_Update', y='Confirmed', linestyle='-', lw=2.1, color=color, ax=ax, label='World')
-        cases_all.plot(x='Last_Update', y='Deaths', linestyle='--', lw=2.1, color=color, ax=ax, label='')
+            forecast(args.forec_deaths, cases[cases['Region'] == region],
+                     field_name='Deaths', ax=ax, color=color, last_day=args.last_day)
 
     legend = ax.legend()
     for handle in legend.legendHandles:
@@ -148,11 +145,6 @@ def process(args, connection, base_path, cases_file, today_file):
     ax.set_ylim(ymin=1)
     if args.from_date:
         ax.set_xlim(xmin=args.from_date)
-    if args.forec_confirmed and args.forec_deaths:
-        if date_forecast_confirmed > date_forecast_deaths:
-            ax.set_xlim(xmax=date_forecast_confirmed)
-        else:
-            ax.set_xlim(xmax=date_forecast_deaths)
 
     if not args.nonlog:
         plt.yscale('log')
@@ -171,7 +163,7 @@ if __name__ == '__main__':
                                      poly=a*x^3+b*x^2+c*x+d and covid=(a*x+b)*exp(c/x+d).', prog='covid_plot')
 
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
-    parser.add_argument('--list', action='store_true', help='get list of available countries')
+    parser.add_argument('--list', action='store_true', help='get list of available regions')
     parser.add_argument('--last_day', default=False, action='store_true', help='use the last day for forecast')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
                         help='set function type (linear, poly or covid), forward and backward days for forecast\
@@ -179,18 +171,17 @@ if __name__ == '__main__':
     parser.add_argument('--forec_deaths', type=str, nargs='+', default=[],
                         help='set function type (linear, poly or covid), forward and backward days for forecast\
                         deaths: type n n')
-    parser.add_argument('--countries', type=str, nargs='+', default=['Russia'],
-                        help='set list of countries to be plotted')
+    parser.add_argument('--regions', type=str, nargs='+', default=['Russia'],
+                        help='set list of regions to be plotted')
     parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default=None,
                         help='set init data for plot: Y-m-d')
-    parser.add_argument('--total', default=False, action='store_true', help='Plot sum over all countries.')
 
     args = parser.parse_args()
 
     cwd = os.getcwd()
     base_path = "COVID-19/data"
     cases_file = "cases_time.csv"
-    today_file = "cases_country.csv"
+    cases_today_file = "cases_country.csv"
 
     if os.path.isdir(base_path):
         os.chdir(base_path)
@@ -202,12 +193,5 @@ if __name__ == '__main__':
         os.system("git checkout web-data")
         os.chdir("..")
 
-    try:
-        # open in-memory database
-        connection = sqlite3.connect(':memory:')
-        process(args, connection, base_path, cases_file, today_file)
-    except sqlite3.Error as e:
-        print(e, file=sys.stderr)
-    finally:
-        if connection:
-            connection.close()
+    cases = preprocess(args, base_path, cases_file, cases_today_file)
+    process(args, cases)
