@@ -83,13 +83,13 @@ def preprocess(args, base_path, cases_file, cases_today_file):
     cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
     cases_today.rename(columns=rename_dict, inplace=True)
     cases_today = cases_today.drop(columns=drop_list_cases_today)
+    cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
 
     cases = pd.read_csv(os.path.join(base_path, cases_file))
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases.drop(columns=drop_list_cases)
-
-    cases = cases.append(cases_today, ignore_index=True, sort=True)
     cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
+    cases = cases.append(cases_today, ignore_index=True, sort=True)
     cases = cases.sort_values(by=['Region', 'Date'])
 
     if 'World' in set(args.regions):
