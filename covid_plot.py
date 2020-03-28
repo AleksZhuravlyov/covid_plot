@@ -59,35 +59,38 @@ def forecast(forec_args, cases, field_name, ax, color, last_day):
     value = value[backward_condition]
 
     # employ numpy curve fitting for forecast
-    popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float), value, maxfev=int(1.e+9))
+    popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float), value,
+                           maxfev=int(1.e+9))
 
     # plot forecast
     forecast_value = pd.DataFrame()
     forecast_value['Date'] = date_range_forecast.astype('datetime64[ns]')
-    forecast_value[field_name] = func(date_range_forecast.astype('datetime64[D]').astype(int), *popt)
+    forecast_value[field_name] = func(date_range_forecast.astype('datetime64[D]').astype(int),
+                                      *popt)
     forecast_value.Date = forecast_value.Date.dt.normalize()
 
     linestyle = '-'
     if field_name == 'Deaths':
         linestyle = '--'
 
-    forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax, label='')
+    forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax,
+                        label='')
 
     if np.datetime64(int(ax.get_xlim()[1]), 'D') < date_forward:
         ax.set_xlim(xmax=date_forward)
 
 
-def preprocess(args, base_path, cases_file, cases_today_file):
+def preprocess(args, bpath, cfile, ctodayfile):
     rename_dict = {'Country_Region': 'Region', 'Last_Update': 'Date'}
     drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered']
     drop_list_cases = ['Active', 'Delta_Confirmed', 'Delta_Recovered']
 
-    cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
+    cases_today = pd.read_csv(os.path.join(bpath, ctodayfile))
     cases_today.rename(columns=rename_dict, inplace=True)
     cases_today = cases_today.drop(columns=drop_list_cases_today)
     cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
 
-    cases = pd.read_csv(os.path.join(base_path, cases_file))
+    cases = pd.read_csv(os.path.join(bpath, cfile))
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases.drop(columns=drop_list_cases)
     cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
@@ -124,10 +127,12 @@ def process(args, cases, save=False):
         color = next(ax._get_lines.prop_cycler)['color']
 
         cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
-                                              linestyle='-', lw=2.1, color=color, ax=ax, label=region)
+                                              linestyle='-', lw=2.1, color=color, ax=ax,
+                                              label=region)
         if args.deaths or args.forec_deaths:
             cases[cases['Region'] == region].plot(x='Date', y='Deaths',
-                                                  linestyle='--', lw=2.1, color=color, ax=ax, label='')
+                                                  linestyle='--', lw=2.1, color=color, ax=ax,
+                                                  label='')
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
@@ -166,26 +171,30 @@ def process(args, cases, save=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='COVID-19 disease daily plotting script',
-                                     epilog='Forecast works mostly under manual control, but works and\
-                                     the corresponding fitting functions are as follows: linear=a*x+b,\
-                                     poly=a*x^3+b*x^2+c*x+d and covid=(a*x+b)*exp(c/x+d).', prog='covid_plot')
+                                     epilog='Forecast works mostly under manual control, but works '
+                                            'and the corresponding fitting functions are '
+                                            'as follows: '
+                                            'linear=a*x+b, poly=a*x^3+b*x^2+c*x+d and '
+                                            'covid=(a*x+b)*exp(c/x+d).', prog='covid_plot')
 
-    parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
+    parser.add_argument('--nonlog', default=False, action='store_true',
+                        help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available regions')
-    parser.add_argument('--last_day', default=False, action='store_true', help='use the last day for forecast')
+    parser.add_argument('--last_day', default=False, action='store_true',
+                        help='use the last day for forecast')
     parser.add_argument('--deaths', default=False, action='store_true', help='show deaths')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
-                        help='set function type (linear, poly or covid), forward and backward days for forecast\
-                        confirmed cases: type n n')
+                        help='set function type (linear, poly or covid), '
+                             'forward and backward days for forecast confirmed cases: type n n')
     parser.add_argument('--forec_deaths', type=str, nargs='+', default=[],
-                        help='set function type (linear, poly or covid), forward and backward days for forecast\
-                        deaths: type n n')
+                        help='set function type (linear, poly or covid), '
+                             'forward and backward days for forecast deaths: type n n')
     parser.add_argument('--regions', type=str, nargs='+', default=['Russia'],
                         help='set list of regions to be plotted')
-    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), default=None,
-                        help='set init data for plot: Y-m-d')
+    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
+                        default=None, help='set init data for plot: Y-m-d')
 
-    args = parser.parse_args()
+    arguments = parser.parse_args()
 
     cwd = os.getcwd()
     base_path = "COVID-19/data"
@@ -202,5 +211,5 @@ if __name__ == '__main__':
         os.system("git checkout web-data")
         os.chdir("..")
 
-    cases = preprocess(args, base_path, cases_file, cases_today_file)
-    process(args, cases)
+    current_cases = preprocess(arguments, base_path, cases_file, cases_today_file)
+    process(arguments, current_cases)
