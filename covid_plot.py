@@ -123,8 +123,9 @@ def process(args, cases):
 
         cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
                                               linestyle='-', lw=2.1, color=color, ax=ax, label=region)
-        cases[cases['Region'] == region].plot(x='Date', y='Deaths',
-                                              linestyle='--', lw=2.1, color=color, ax=ax, label='')
+        if args.deaths or args.forec_deaths:
+            cases[cases['Region'] == region].plot(x='Date', y='Deaths',
+                                                  linestyle='--', lw=2.1, color=color, ax=ax, label='')
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
@@ -165,6 +166,7 @@ if __name__ == '__main__':
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available regions')
     parser.add_argument('--last_day', default=False, action='store_true', help='use the last day for forecast')
+    parser.add_argument('--deaths', default=False, action='store_true', help='show deaths')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
                         help='set function type (linear, poly or covid), forward and backward days for forecast\
                         confirmed cases: type n n')
