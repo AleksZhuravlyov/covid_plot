@@ -31,7 +31,7 @@ def forecast(forec_args, cases, field_name, ax, color, last_day):
     elif func_type == 'covid':
         func = func_covid
     else:
-        print("No such function type, use exp or poly", file=sys.stderr)
+        print('No such function type, use covid, poly or linear', file=sys.stderr)
         sys.exit(-1)
 
     forward = np.timedelta64(int(forec_args[1]), 'D')
