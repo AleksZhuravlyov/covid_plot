@@ -1,5 +1,7 @@
 import os
 import sys
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
@@ -20,7 +22,7 @@ def func_covid(x, a, b, c, d):
     return (a * x + b) * np.exp(c / x + d)
 
 
-def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
+def forecast(forec_args, cases, field_name, ax, color, last_day):
     # set function type for curve fitting
 
     func_type = forec_args[0]
@@ -31,7 +33,7 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
     elif func_type == 'covid':
         func = func_covid
     else:
-        print('No such function type, use covid, poly or linear', file=sys.stderr)
+        print("No such function type, use exp or poly", file=sys.stderr)
         sys.exit(-1)
 
     forward = np.timedelta64(int(forec_args[1]), 'D')
@@ -51,7 +53,7 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
 
     # set time frame for curve fitting for confirmed cases
     backward_condition = date > date_backward
-    if not forec_current_day:
+    if not last_day:
         backward_condition[-1] = False  # the last day is not use since can be non filled
     date_range_fitting = date[backward_condition]
     value = value[backward_condition]
@@ -80,10 +82,17 @@ def preprocess(args, base_path, cases_file, cases_today_file):
     drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered']
     drop_list_cases = ['Active', 'Delta_Confirmed', 'Delta_Recovered']
 
+    cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
+    cases_today.rename(columns=rename_dict, inplace=True)
+    cases_today = cases_today.drop(columns=drop_list_cases_today)
+    cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
+
     cases = pd.read_csv(os.path.join(base_path, cases_file))
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases.drop(columns=drop_list_cases)
     cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
+    cases = cases.append(cases_today, ignore_index=True, sort=True)
+    cases = cases.sort_values(by=['Region', 'Date'])
 
     if 'World' in set(args.regions):
         world = cases.groupby(['Date']).sum()
@@ -91,19 +100,10 @@ def preprocess(args, base_path, cases_file, cases_today_file):
         world['Date'] = world.index
         cases = cases.append(world, ignore_index=True, sort=True)
 
-    if args.current_day or args.forec_current_day:
-        cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
-        cases_today.rename(columns=rename_dict, inplace=True)
-        cases_today = cases_today.drop(columns=drop_list_cases_today)
-        cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
-        cases = cases.append(cases_today, ignore_index=True, sort=True)
-
-    cases = cases.sort_values(by=['Region', 'Date'])
-
     return cases
 
 
-def process(args, cases):
+def process(args, cases, save=False):
     regions_all = sorted(set(cases['Region'].values.tolist()))
     regions = sorted(list(set(regions_all) & set(args.regions)))
 
@@ -118,31 +118,26 @@ def process(args, cases):
         sys.exit(0)
 
     fig, ax = plt.subplots()
-
-    plt.title('Confirmed Cases')
-    if args.deaths or args.forec_deaths:
-        plt.title(ax.get_title() + ' (—) and Deaths (---)')
-
     for region in regions:
         # plot region
 
         color = next(ax._get_lines.prop_cycler)['color']
 
-        cases[cases['Region'] == region].plot(x='Date', y='Confirmed', linestyle='-', lw=2.1,
-                                              color=color, ax=ax, label=region)
+        cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
+                                              linestyle='-', lw=2.1, color=color, ax=ax, label=region)
         if args.deaths or args.forec_deaths:
-            cases[cases['Region'] == region].plot(x='Date', y='Deaths', linestyle='--', lw=2.1,
-                                                  color=color, ax=ax, label='')
+            cases[cases['Region'] == region].plot(x='Date', y='Deaths',
+                                                  linestyle='--', lw=2.1, color=color, ax=ax, label='')
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
-            forecast(args.forec_confirmed, cases[cases['Region'] == region], field_name='Confirmed',
-                     ax=ax, color=color, forec_current_day=args.forec_current_day)
+            forecast(args.forec_confirmed, cases[cases['Region'] == region],
+                     field_name='Confirmed', ax=ax, color=color, last_day=args.last_day)
 
         # forecast and plot deaths
         if args.forec_deaths:
-            forecast(args.forec_deaths, cases[cases['Region'] == region], field_name='Deaths',
-                     ax=ax, color=color, forec_current_day=args.forec_current_day)
+            forecast(args.forec_deaths, cases[cases['Region'] == region],
+                     field_name='Deaths', ax=ax, color=color, last_day=args.last_day)
 
     legend = ax.legend()
     for handle in legend.legendHandles:
@@ -150,17 +145,23 @@ def process(args, cases):
 
     plt.ylabel('people')
     plt.xlabel('')
-
-    ax.set_ylim(ymin=1)
+    ax.set_ylim(bottom=1)
     if args.from_date:
         ax.set_xlim(xmin=args.from_date)
 
     if not args.nonlog:
         plt.yscale('log')
 
+    plt.title('Confirmed Cases (—) and Deaths (---)')
+
     plt.grid(True)
 
-    plt.show()
+    if save:
+        plt.savefig(save, dpi=150, bbox_inches='tight')
+        return save
+    else:
+        plt.show()
+    plt.close()
 
 
 if __name__ == '__main__':
@@ -171,10 +172,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--nonlog', default=False, action='store_true', help='set linear scale for Y axis')
     parser.add_argument('--list', action='store_true', help='get list of available regions')
-    parser.add_argument('--forec_current_day', default=False, action='store_true',
-                        help='use the current day for forecast')
-    parser.add_argument('--current_day', default=False, action='store_true',
-                        help='use the current day for visualisation')
+    parser.add_argument('--last_day', default=False, action='store_true', help='use the last day for forecast')
     parser.add_argument('--deaths', default=False, action='store_true', help='show deaths')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
                         help='set function type (linear, poly or covid), forward and backward days for forecast\

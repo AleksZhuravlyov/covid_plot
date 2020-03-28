@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="COVID-19 plot">
+<title>COVID-PLOT</title>
+<link href="/covid/data/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<h1><a href="/covid">COVID-PLOT</a></h1>
+  <p style="width : 60%;">Графики количества подтвержденных случаев заражения и смертей от заболевания COVID-19, вызванного коронавирусом.
+Вы можете выбрать интересующие вас страны.</p>
+  <hr/>
+        <div>
+        {% if image %}
+	        <img src="data/{{image}}" style="max-width:100%;" class="img-responsive">
+	{% endif %}
+	</div>
+	<div>
+        {% if error %}
+	        <p style="border : 1; background-color : red;"><big><strong>{{error}}</strong></big></p>
+	{% endif %}
+	</div>
+    <div>
+     <p>Выберите страны:</p>
+     </div>
+    <form method=post>
+	<select autofocus required name = "country" multiple size="15">
+	{% for country in countries %}
+	<option value = "{{ country }}">{{ country }}</option>
+	{% endfor %}
+	</select>
+        <input type="submit" value="Построить график по выбранным странам"/>
+	<label>
+        <input type="checkbox" checked name="log" value="log">Логарифмическая шкала
+        </label>
+    </form>
+
+<p><i><a href="https://github.com/AleksZhuravlyov/covid_plot">Github repository</a></i></p>
+</body>
+</html>
