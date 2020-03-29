@@ -31,8 +31,8 @@ def show_plot():
         nonlog = False
         if not log:
             nonlog = True
-        args = SimpleNamespace(deaths=True, list=False, from_date=None, nonlog=nonlog,
-                               regions=chosen_countries, forec_confirmed=[], forec_deaths=[])
+        args = SimpleNamespace(deaths=True, list=False, current_day=[], from_date=None, nonlog=nonlog,
+                               regions=chosen_countries, forec_confirmed=[], forec_deaths=[], forec_current_day=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
         out_image = '_'.join(
             ['_'.join(chosen_countries), datetime.now().strftime('%Y-%m-%d-%H-%M-%S')]) + '.png'
