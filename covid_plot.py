@@ -79,12 +79,12 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
         ax.set_xlim(xmax=date_forward)
 
 
-def preprocess(args, base_path, cases_file, cases_today_file):
+def preprocess(args, bpath, cfile, ctodayfile):
     rename_dict = {'Country_Region': 'Region', 'Last_Update': 'Date'}
     drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered']
     drop_list_cases = ['Active', 'Delta_Confirmed', 'Delta_Recovered']
 
-    cases = pd.read_csv(os.path.join(base_path, cases_file))
+    cases = pd.read_csv(os.path.join(bpath, cfile))
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases.drop(columns=drop_list_cases)
     cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
@@ -96,7 +96,7 @@ def preprocess(args, base_path, cases_file, cases_today_file):
         cases = cases.append(world, ignore_index=True, sort=True)
 
     if args.current_day or args.forec_current_day:
-        cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
+        cases_today = pd.read_csv(os.path.join(bpath, ctodayfile))
         cases_today.rename(columns=rename_dict, inplace=True)
         cases_today = cases_today.drop(columns=drop_list_cases_today)
         cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
@@ -142,12 +142,14 @@ def process(args, cases, plot_file_name=False, use_agg=False):
         # forecast and plot confirmed cases
         if args.forec_confirmed:
             forecast(args.forec_confirmed, cases[cases['Region'] == region],
-                     field_name='Confirmed', ax=ax, color=color, forec_current_day=args.forec_current_day)
+                     field_name='Confirmed', ax=ax, color=color,
+                     forec_current_day=args.forec_current_day)
 
         # forecast and plot deaths
         if args.forec_deaths:
             forecast(args.forec_deaths, cases[cases['Region'] == region],
-                     field_name='Deaths', ax=ax, color=color, forec_current_day=args.forec_current_day)
+                     field_name='Deaths', ax=ax, color=color,
+                     forec_current_day=args.forec_current_day)
 
     legend = ax.legend()
     for handle in legend.legendHandles:
@@ -202,7 +204,7 @@ if __name__ == '__main__':
     parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
                         default=None, help='set init data for plot: Y-m-d')
 
-    args = parser.parse_args()
+    arguments = parser.parse_args()
 
     cwd = os.getcwd()
     base_path = "COVID-19/data"
@@ -219,5 +221,5 @@ if __name__ == '__main__':
         os.system("git checkout web-data")
         os.chdir("..")
 
-    cases = preprocess(args, base_path, cases_file, cases_today_file)
-    process(args, cases)
+    current_cases = preprocess(arguments, base_path, cases_file, cases_today_file)
+    process(arguments, current_cases)

@@ -32,11 +32,12 @@ def show_plot():
         if not log:
             nonlog = True
         args = SimpleNamespace(deaths=True, list=False, from_date=None, nonlog=nonlog,
-                                 regions=chosen_countries, forec_confirmed=[], forec_deaths=[])
+                               regions=chosen_countries, forec_confirmed=[], forec_deaths=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
         out_image = '_'.join(
             ['_'.join(chosen_countries), datetime.now().strftime('%Y-%m-%d-%H-%M-%S')]) + '.png'
-        _ = process(args, cases, plot_file_name='/var/www/html/covid/data/' + out_image, use_agg=True)
+        _ = process(args, cases, plot_file_name='/var/www/html/covid/data/' + out_image,
+                    use_agg=True)
         return render_template("covid.html", image=out_image, countries=all_countries)
     else:
         return render_template("covid.html", countries=all_countries)
