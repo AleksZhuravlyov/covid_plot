@@ -58,21 +58,24 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
     value = value[backward_condition]
 
     # employ numpy curve fitting for forecast
-    popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float), value,
+    popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float),
+                           value,
                            maxfev=int(1.e+9))
 
     # plot forecast
     forecast_value = pd.DataFrame()
     forecast_value['Date'] = date_range_forecast.astype('datetime64[ns]')
-    forecast_value[field_name] = func(date_range_forecast.astype('datetime64[D]').astype(int),
-                                      *popt)
+    forecast_value[field_name] = func(
+        date_range_forecast.astype('datetime64[D]').astype(int),
+        *popt)
     forecast_value.Date = forecast_value.Date.dt.normalize()
 
     linestyle = '-'
     if field_name == 'Deaths':
         linestyle = '--'
 
-    forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=1, color=color, ax=ax,
+    forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=1, color=color,
+                        ax=ax,
                         label='')
 
     if np.datetime64(int(ax.get_xlim()[1]), 'D') < date_forward:
@@ -132,12 +135,14 @@ def process(args, cases, plot_file_name=False, use_agg=False):
         color = next(ax._get_lines.prop_cycler)['color']
 
         cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
-                                              linestyle='-', lw=2.1, color=color, ax=ax,
-                                              label=region)
+                                              linestyle='-', lw=2.1, color=color,
+                                              ax=ax, label=region, marker='o',
+                                              markersize=2.7, )
         if args.deaths or args.forec_deaths:
             cases[cases['Region'] == region].plot(x='Date', y='Deaths',
-                                                  linestyle='--', lw=2.1, color=color, ax=ax,
-                                                  label='')
+                                                  linestyle='--', lw=2.1, color=color,
+                                                  ax=ax, label='', marker='o',
+                                                  markersize=2.7)
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
@@ -183,16 +188,19 @@ if __name__ == '__main__':
                                             'and the corresponding fitting functions are '
                                             'as follows: '
                                             'linear=a*x+b, poly=a*x^3+b*x^2+c*x+d and '
-                                            'covid=(a*x+b)*exp(c/x+d).', prog='covid_plot')
+                                            'covid=(a*x+b)*exp(c/x+d).',
+                                     prog='covid_plot')
 
     parser.add_argument('--nonlog', default=False, action='store_true',
                         help='set linear scale for Y axis')
-    parser.add_argument('--list', action='store_true', help='get list of available regions')
+    parser.add_argument('--list', action='store_true',
+                        help='get list of available regions')
     parser.add_argument('--forec_current_day', default=False, action='store_true',
                         help='use the current day for forecast')
     parser.add_argument('--current_day', default=False, action='store_true',
                         help='use the current day for visualisation')
-    parser.add_argument('--deaths', default=False, action='store_true', help='show deaths')
+    parser.add_argument('--deaths', default=False, action='store_true',
+                        help='show deaths')
     parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
                         help='set function type (linear, poly or covid), '
                              'forward and backward days for forecast confirmed cases: type n n')
@@ -201,7 +209,8 @@ if __name__ == '__main__':
                              'forward and backward days for forecast deaths: type n n')
     parser.add_argument('--regions', type=str, nargs='+', default=['Russia'],
                         help='set list of regions to be plotted')
-    parser.add_argument("--from_date", type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
+    parser.add_argument("--from_date",
+                        type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
                         default=None, help='set init data for plot: Y-m-d')
 
     arguments = parser.parse_args()
