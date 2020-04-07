@@ -20,8 +20,11 @@ cases_file = "cases_time.csv"
 cases_today_file = "cases_country.csv"
 
 with open(countries_file, 'r') as f:
-    all_countries = set(json.load(f))
+    all_countries = json.load(f)
 
+all_countries = sorted(all_countries)
+w_pos = all_countries.index('World')
+all_countries.insert(0, all_countries.pop(w_pos))
 
 @covid_service.route('/', methods=['GET', 'POST'])
 def show_plot():
@@ -31,9 +34,9 @@ def show_plot():
         nonlog = False
         if not log:
             nonlog = True
-        if set(chosen_countries) - all_countries:
+        if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
-                                   countries=sorted(all_countries))
+                                   countries=all_countries)
         args = SimpleNamespace(deaths=True, list=False, current_day=[], from_date=None,
                                nonlog=nonlog, regions=chosen_countries, forec_confirmed=[],
                                forec_deaths=[], forec_current_day=[])
@@ -42,6 +45,6 @@ def show_plot():
             ['_'.join(chosen_countries), datetime.now().strftime('%Y-%m-%d-%H-%M-%S')]) + '.png'
         _ = process(args, cases, plot_file_name=basedir + 'data/' + out_image,
                     use_agg=True)
-        return render_template("covid.html", image=out_image, countries=sorted(all_countries))
+        return render_template("covid.html", image=out_image, countries=all_countries)
     else:
-        return render_template("covid.html", countries=sorted(all_countries))
+        return render_template("covid.html", countries=all_countries)

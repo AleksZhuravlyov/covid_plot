@@ -125,9 +125,9 @@ def process(args, cases, plot_file_name=False, use_agg=False):
         sys.exit(0)
 
     fig, ax = plt.subplots()
-    plt.title('Confirmed Cases')
+    plt.title('Подтвержденные случаи')
     if args.deaths or args.forec_deaths:
-        plt.title(ax.get_title() + ' (—) and Deaths (---)')
+        plt.title(ax.get_title() + ' (—) и смерти (---)')
 
     for region in regions:
         # plot region
