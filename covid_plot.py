@@ -160,7 +160,7 @@ def process(args, cases, plot_file_name=False, use_agg=False):
     for handle in legend.legendHandles:
         handle.set_linewidth(5.0)
 
-    plt.ylabel('people')
+    plt.ylabel('Человек')
     plt.xlabel('')
     ax.set_ylim(bottom=1)
     if args.from_date:
