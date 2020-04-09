@@ -26,8 +26,10 @@ all_countries = sorted(all_countries)
 w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))
 
+
 @covid_service.route('/', methods=['GET', 'POST'])
 def show_plot():
+    chosen_countries = []
     if request.method == 'POST':
         chosen_countries = request.form.getlist('country')
         log = request.form.get('log')
@@ -45,6 +47,8 @@ def show_plot():
             ['_'.join(chosen_countries), datetime.now().strftime('%Y-%m-%d-%H-%M-%S')]) + '.png'
         _ = process(args, cases, plot_file_name=basedir + 'data/' + out_image,
                     use_agg=True)
-        return render_template("covid.html", image=out_image, countries=all_countries)
+        return render_template("covid.html", image=out_image, countries=all_countries,
+                               chosen_countries=chosen_countries)
     else:
-        return render_template("covid.html", countries=all_countries)
+        return render_template("covid.html", countries=all_countries,
+                               chosen_countries=chosen_countries)

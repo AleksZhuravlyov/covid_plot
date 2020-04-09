@@ -5,19 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta name="description" content="COVID-19 plot">
         <title>COVID-PLOT</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 </head>
 <body class="container pt-4 vh-100 d-flex flex-column">
         <h1>COVID-PLOT</h1>
-        <p class="lead">Графики подтвержденных случаев инфицирования SARS-CoV-2 и смертей от COVID-19.</p>
+        <p class="lead">Графики подтвержденных случаев инфицирования SARS-CoV-2 и смертей от COVID-19</p>
         <div class="row">
                 <form class="col-lg-4" method=post>
                 <div class="form-group">
                         <label for="country">Выберите одну или несколько стран:</label>
                         <select autofocus required name="country" id="country" multiple size="15" class="form-control">
-                                {% for country in countries %}
-                                <option value = "{{ country }}">{{ country }}</option>
+                                {%- for country in countries %}
+                                <option value = "{{ country }}" {% if country in chosen_countries %} selected {% endif %}>
+                                    {{ country }}
+                                </option>
                                 {% endfor %}
                         </select>
                 </div>
@@ -25,7 +28,8 @@
                                 <input class="form-check-input" type="checkbox" checked name="log" value="log" id="log">
                                 <label class="form-check-label" for="log">Логарифмическая шкала</label>
                         </div>
-                        <button class="btn btn-primary" type="submit" value="Построить график по выбранным странам">Построить график</button>
+                        <button class="btn btn-primary" type="submit" value="Построить график по выбранным странам">
+                            Построить график</button>
                 </form>
                 <div class="col-lg-8">
                         <div>
