@@ -105,6 +105,7 @@ def preprocess(args, bpath, cfile, ctodayfile):
     if args.current_day or args.forec_current_day:
         cases_today = pd.read_csv(os.path.join(bpath, ctodayfile))
         cases_today.rename(columns=rename_dict, inplace=True)
+        cases_today = cases_today[cases_today['UID'] != 840]
         cases_today = cases_today.drop(columns=drop_list_cases_today)
         cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
         cases = cases.append(cases_today, ignore_index=True, sort=True)   
