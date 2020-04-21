@@ -9,29 +9,77 @@
               integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 </head>
-<body class="container pt-4 vh-100 d-flex flex-column bg-transparent">
+<body class="container  pt-4 vh-100 d-flex flex-column bg-transparent">
         <h1>COVID-PLOT</h1>
         <p class="lead">Графики подтвержденных случаев инфицирования SARS-CoV-2 и смертей от COVID-19</p>
         <div class="row">
-                <form class="col-lg-4" method=post>
-                <div class="form-group">
-                        <label for="country">Выберите одну или несколько стран:</label>
-                        <select autofocus required name="country" id="country" multiple size="15" class="form-control">
-                                {%- for country in countries %}
-                                <option value = "{{ country }}" {% if country in chosen_countries %} selected {% endif %}>
-                                    {{ country }}
-                                </option>
-                                {% endfor %}
-                        </select>
-                </div>
-                        <div class="form-group form-check">
-                                <input class="form-check-input" type="checkbox" checked name="log" value="log" id="log">
+                <form class="col-lg-4 mb-3" method=post>
+                        <div class="form-group">
+                                <label for="country">Выберите одну или несколько стран:</label>
+                                <select autofocus required name="country" id="country" multiple size="15" class="form-control">
+                                        {%- for country in countries %}
+                                        <option value = "{{ country }}" {% if country in chosen_countries %} selected {% endif %}>
+                                        {{ country }}
+                                        </option>
+                                        {% endfor %}
+                                </select>
+                        </div>
+                        <!-- <div class="form-group form-check">
+                                <label><input class="form-check-input" type="checkbox" checked name="log" value="log" id="log">Логарифмическая шкала</label>
+                                <label><input class="form-check-input" type="checkbox" name="deaths" value="deaths" id="deaths" checked>Показывать число умерших</label>
+                                <label><input class="form-check-input" type="checkbox" name="current-day" value="current-day" id="current-day">Использовать данные о сегодняшнем дне</label>
                                 <label class="form-check-label" for="log">Логарифмическая шкала</label>
+                        </div> -->
+                        <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" checked name="log" value="log" id="log">
+                                <label class="custom-control-label" for="log"><small>Логарифмическая шкала</small></label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" name="deaths" value="deaths" id="deaths" checked>
+                                <label class="custom-control-label" for="deaths"><small>Показывать число умерших</small></label>
+                        </div>       
+                        <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" name="current-day" value="current-day" id="current-day">
+                                <label class="custom-control-label" for="current-day"><small>Использовать данные о&nbsp;сегодняшнем дне</small></label>
+                        </div>
+                        <div class="form-group form-row align-items-center">
+                                <label class="col-auto mb-0" for="from-day"><small>Построить график  с&nbsp;</small></label>
+                                <input class="form-control col" type="text" name="from-day" id="from-day" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" placeholder="10-04-2020">
+                        </div>
+                        <button class="btn btn-link text-decoration-none text-left d-block mb-3 p-0 js-collapse-input" type="button" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" onclick=""><small class="js-collapse-input-inner">Показать дополнительные настройки (экстраполяция)</small></button>
+                        <div class="collapse" id="collapseExample">
+                                <!-- <input class="custom-control-input" type="checkbox" name="current-day" value="current-day" id="current-day">
+                                        <label class="custom-control-label" for="current-day">Использовать данные о&nbsp;сегодняшнем дне</label> -->
+                                <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="linear" name="function">
+                                        <label class="custom-control-label" for="linear"><small>Linear</small></label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="poly" name="function">
+                                        <label class="custom-control-label" for="poly"><small>Poly</small></label>
+                                </div>
+                                <div class="custom-control custom-radio mb-3">
+                                        <input type="radio" class="custom-control-input" id="covid" name="function">
+                                        <label class="custom-control-label" for="covid"><small>Covid</small></label>
+                                </div>
+                                <div class="form-group form-row align-items-center">
+                                        <label class="col-auto mb-0" for="for-period"><small>Экстраполировать на</small></label>
+                                        <input class="form-control col js-for-period" type="number" name="for-period" id="for-period" placeholder="3" min="3">
+                                        <span class="ml-1"><small>дня</small></span>
+                                </div>
+                                <div class="form-group form-row align-items-center">
+                                        <label class="col-auto mb-0" for="on-period"><small>Экстраполировать на основе</small></label>
+                                        <input class="form-control col js-on-period" type="number" name="for-period" id="on-period" placeholder="10" min='0'>
+                                        <span class="ml-1"><small>дней</small></span>
+                                </div>
+
+                                
                         </div>
                         <button class="btn btn-primary" type="submit" value="Построить график по выбранным странам">
                             Построить график</button>
                         {% if chosen_countries %}
-                        <input type="button" class="btn btn-primary" onclick="window.location.href = '/covid/';" value="Сбросить"/>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href = '/covid/';">Сбросить</button>
                         {% endif %}
                 </form>
                 <div class="col-lg-8">
@@ -48,5 +96,9 @@
                 </div>
         </div>
         <p class="mt-auto"><em><a href="https://github.com/AleksZhuravlyov/covid_plot">Github repository</a></em></p>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src='../data/js/script.js'></script>
 </body>
 </html>
