@@ -82,7 +82,7 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
         ax.set_xlim(xmax=date_forward)
 
 
-def preprocess(args, bpath, cfile, ctodayfile):   
+def preprocess(args, bpath, cfile, ctodayfile):
     rename_dict = {'Country_Region': 'Region', 'Last_Update': 'Date'}
     drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered',  'Incident_Rate',
                              'People_Tested', 'People_Hospitalized', 'Mortality_Rate',
@@ -91,11 +91,11 @@ def preprocess(args, bpath, cfile, ctodayfile):
                        'Incident_Rate', 'People_Tested', 'People_Hospitalized', 'Province_State',
                        'FIPS', 'UID', 'iso3', 'Report_Date_String']
 
-    cases = pd.read_csv(os.path.join(bpath, cfile))    
+    cases = pd.read_csv(os.path.join(bpath, cfile))
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases[cases['UID'] != 840]
     cases = cases.drop(columns=drop_list_cases)
-    cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()    
+    cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
 
     if 'World' in set(args.regions):
         world = cases.groupby(['Date']).sum()
@@ -109,10 +109,10 @@ def preprocess(args, bpath, cfile, ctodayfile):
         cases_today = cases_today[cases_today['UID'] != 840]
         cases_today = cases_today.drop(columns=drop_list_cases_today)
         cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
-        cases = cases.append(cases_today, ignore_index=True, sort=True)   
-    
+        cases = cases.append(cases_today, ignore_index=True, sort=True)
+
     cases = cases.groupby(['Date', 'Region']).sum().reset_index()
-    cases = cases.sort_values(by=['Region', 'Date'])    
+    cases = cases.sort_values(by=['Region', 'Date'])
 
     return cases
 
