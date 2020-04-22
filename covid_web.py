@@ -30,6 +30,8 @@ all_countries.insert(0, all_countries.pop(w_pos))
 @covid_service.route('/', methods=['GET', 'POST'])
 def show_plot():
     chosen_countries = []
+    log = True
+    deaths = True
     if request.method == 'POST':
         chosen_countries = request.form.getlist('country')
         log = request.form.get('log')
@@ -46,18 +48,18 @@ def show_plot():
         cases = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
-        params = '_'.join([getattr(args, i) for i in vars(args)])
-        params = params + datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        params = '_'.join([str(getattr(args, i)) for i in vars(args)])
+        params = params + datetime.now().strftime('%Y-%m-%d-%H')
         m = hashlib.md5()
         name = params.encode('ascii', 'backslashreplace')
         m.update(name)
         fname = m.hexdigest()
         out_image = fname + '.png'
-
-        _ = process(args, cases, plot_file_name=basedir + 'data/' + out_image,
+        if not path.isfile(path.join(basedir, 'data', out_image)):
+            _ = process(args, cases, plot_file_name=basedir + 'data/' + out_image,
                     use_agg=True)
         return render_template("covid.html", image=out_image, countries=all_countries,
-                               chosen_countries=chosen_countries)
+                               chosen_countries=chosen_countries, log=log, deaths=deaths)
     else:
         return render_template("covid.html", countries=all_countries,
-                               chosen_countries=chosen_countries)
+                               chosen_countries=chosen_countries, log=log, deaths=deaths)

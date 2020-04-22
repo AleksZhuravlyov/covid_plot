@@ -31,11 +31,11 @@
                                 <label class="form-check-label" for="log">Логарифмическая шкала</label>
                         </div> -->
                         <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" checked name="log" value="log" id="log">
+                                <input class="custom-control-input" type="checkbox" {% if log %} checked {% endif %} name="log" value="log" id="log">
                                 <label class="custom-control-label" for="log"><small>Логарифмическая шкала</small></label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" name="deaths" value="deaths" id="deaths" checked>
+                                <input class="custom-control-input" type="checkbox" {% if deaths %} checked {% endif %} name="deaths" value="deaths" id="deaths">
                                 <label class="custom-control-label" for="deaths"><small>Показывать число умерших</small></label>
                         </div>       
                         <div class="custom-control custom-checkbox">
