@@ -36,13 +36,14 @@ def show_plot():
         chosen_countries = request.form.getlist('country')
         log = request.form.get('log')
         deaths = request.form.get('deaths')
+        current_day = request.form.get('current-day')
         nonlog = False
         if not log:
             nonlog = True
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
                                    countries=all_countries)
-        args = SimpleNamespace(deaths=deaths, list=False, current_day=[], from_date=None,
+        args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day, from_date=None,
                                nonlog=nonlog, regions=chosen_countries, forec_confirmed=[],
                                forec_deaths=[], forec_current_day=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
@@ -55,9 +56,9 @@ def show_plot():
         m.update(name)
         fname = m.hexdigest()
         out_image = fname + '.png'
-        if not path.isfile(path.join(basedir, 'data', out_image)):
-            _ = process(args, cases, plot_file_name=basedir + 'data/' + out_image,
-                    use_agg=True)
+        imagepath = path.join(basedir, 'data', out_image)
+        if not path.isfile(imagepath):
+            _ = process(args, cases, plot_file_name=imagepath, use_agg=True)
         return render_template("covid.html", image=out_image, countries=all_countries,
                                chosen_countries=chosen_countries, log=log, deaths=deaths)
     else:
