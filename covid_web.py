@@ -46,7 +46,8 @@ def show_plot():
         cases = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
-        params = args + datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        params = '_'.join([getattr(args, i) for i in vars(args)])
+        params = params + datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         m = hashlib.md5()
         name = params.encode('ascii', 'backslashreplace')
         m.update(name)
