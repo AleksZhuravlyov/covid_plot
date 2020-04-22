@@ -85,10 +85,11 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
 def preprocess(args, bpath, cfile, ctodayfile):   
     rename_dict = {'Country_Region': 'Region', 'Last_Update': 'Date'}
     drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered',  'Incident_Rate',
-       'People_Tested', 'People_Hospitalized', 'Mortality_Rate', 'UID', 'ISO3']
+                             'People_Tested', 'People_Hospitalized', 'Mortality_Rate',
+                             'UID', 'ISO3']
     drop_list_cases = ['Active', 'Delta_Confirmed', 'Delta_Recovered', 'Recovered',
-    'Incident_Rate', 'People_Tested', 'People_Hospitalized', 'Province_State', 'FIPS',
-    'UID', 'iso3', 'Report_Date_String']
+                       'Incident_Rate', 'People_Tested', 'People_Hospitalized', 'Province_State',
+                       'FIPS', 'UID', 'iso3', 'Report_Date_String']
 
     cases = pd.read_csv(os.path.join(bpath, cfile))    
     cases.rename(columns=rename_dict, inplace=True)
