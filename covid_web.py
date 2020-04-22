@@ -37,15 +37,16 @@ def show_plot():
         log = request.form.get('log')
         deaths = request.form.get('deaths')
         current_day = request.form.get('current-day')
+        from_date = request.form.get('from-day')
         nonlog = False
         if not log:
             nonlog = True
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
                                    countries=all_countries)
-        args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day, from_date=None,
-                               nonlog=nonlog, regions=chosen_countries, forec_confirmed=[],
-                               forec_deaths=[], forec_current_day=[])
+        args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day,
+                               from_date=from_date, nonlog=nonlog, regions=chosen_countries,
+                               forec_confirmed=[], forec_deaths=[], forec_current_day=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
