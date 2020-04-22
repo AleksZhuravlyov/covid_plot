@@ -7,8 +7,8 @@ from os import path
 from types import SimpleNamespace
 from flask import render_template, Blueprint
 from flask import request
-
 from covid_plot import process, preprocess
+import hashlib
 
 basedir = '/var/www/html/covid/'
 countries_file = path.join(basedir, 'data/countries.json')
@@ -33,18 +33,26 @@ def show_plot():
     if request.method == 'POST':
         chosen_countries = request.form.getlist('country')
         log = request.form.get('log')
+        deaths = request.form.get('deaths')
         nonlog = False
         if not log:
             nonlog = True
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
                                    countries=all_countries)
-        args = SimpleNamespace(deaths=True, list=False, current_day=[], from_date=None,
+        args = SimpleNamespace(deaths=deaths, list=False, current_day=[], from_date=None,
                                nonlog=nonlog, regions=chosen_countries, forec_confirmed=[],
                                forec_deaths=[], forec_current_day=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
-        out_image = '_'.join(
-            ['_'.join(chosen_countries), datetime.now().strftime('%Y-%m-%d-%H-%M-%S')]) + '.png'
+
+        # Creating unique filename for the plot
+        params = args + datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        m = hashlib.md5()
+        name = params.encode('ascii', 'backslashreplace')
+        m.update(name)
+        fname = m.hexdigest()
+        out_image = fname + '.png'
+
         _ = process(args, cases, plot_file_name=basedir + 'data/' + out_image,
                     use_agg=True)
         return render_template("covid.html", image=out_image, countries=all_countries,
