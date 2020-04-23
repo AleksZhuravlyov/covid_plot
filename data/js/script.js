@@ -42,6 +42,21 @@
 })();
 
 (function() {
+  let checkboxForecConfirmed = document.querySelector('.js-forec-confirmed');
+  let radioLinearConfirmed = document.querySelector('#linear');
+  let checkboxForecDeaths = document.querySelector('.js-forec-deaths');
+  let radioLinearDeaths = document.querySelector('#linear2');
+
+  checkboxForecConfirmed.addEventListener('change', function() {
+    checkboxForecConfirmed.checked ? radioLinearConfirmed.checked = true : radioLinearConfirmed.checked = false;
+  });
+
+  checkboxForecDeaths.addEventListener('change', function() {
+    checkboxForecDeaths.checked ? radioLinearDeaths.checked = true : radioLinearDeaths.checked = false;
+  });
+})();
+
+(function() {
   // let descktopSelectSize = '15';
   // let tabletSelectSize = '5';
   let forPeriodInput = document.querySelector('.js-for-period');

@@ -48,34 +48,65 @@
                         </div>
                         <button class="btn btn-link text-decoration-none text-left d-block mb-3 p-0 js-collapse-input" type="button" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" onclick=""><small class="js-collapse-input-inner">Показать дополнительные настройки (экстраполяция)</small></button>
                         <div class="collapse" id="collapseExample">
+                                <div class="forec-confirmed">
+                                        <div class="custom-control custom-checkbox mb-2">
+                                                <input class="custom-control-input js-forec-confirmed" type="checkbox" name="forec-confirmed" value="forec-confirmed" {% if forec_confirmed %} checked {% endif %} id="forec-confirmed">
+                                                <label class="custom-control-label" for="forec-confirmed"><small>Экстраполировать число подтвержденных случаев</small></label>
+                                        </div>
+                                        <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="linear" %} checked {% endif %} id="linear" value="linear" name="confirmed_function">
+                                                <label class="custom-control-label" for="linear"><small>Linear</small></label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="poly" %} checked {% endif %} id="poly" value="poly" name="confirmed_function">
+                                                <label class="custom-control-label" for="poly"><small>Poly</small></label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="covid" %} checked {% endif %} id="covid" value="covid" name="confirmed_function">
+                                                <label class="custom-control-label" for="covid"><small>Covid</small></label>
+                                        </div>
+                                        <div class="form-group form-row align-items-center">
+                                                <label class="col-auto mb-0" for="for_period_confirmed"><small>Экстраполировать вперёд на</small></label>
+                                                <input class="form-control col js-for-period" type="number" {% if forec_confirmed %} value="{{forec_confirmed[1]}}" {% endif %} name="for_period_confirmed" id="for_period_confirmed" value="7" placeholder="7" min="3">
+                                                <span class="ml-1"><small>(дни)</small></span>
+                                        </div>
+                                        <div class="form-group form-row align-items-center">
+                                                <label class="col-auto mb-0" for="on_period_confirmed"><small>Экстраполировать на основе последних</small></label>
+                                                <input class="form-control col js-on-period" type="number"  {% if forec_confirmed %} value="{{forec_confirmed[2]}}" {% endif %} name="on_period_confirmed" id="on_period_confirmed" value="7" placeholder="7" min='4'>
+                                                <span class="ml-1"><small>(дни)</small></span>
+                                        </div>
+                                </div>
+                                <div class="forec-deaths">
+                                        <div class="custom-control custom-checkbox mb-2">
+                                                <input class="custom-control-input js-forec-deaths" type="checkbox" name="forec-deaths" value="forec-deaths"  {% if forec_deaths %} checked {% endif %}  id="forec-deaths">
+                                                <label class="custom-control-label" for="forec-deaths"><small>Экстраполировать число умерших</small></label>
+                                        </div>
+                                        <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="linear2" %} checked {% endif %} id="linear2" value="linear2" name="deaths_function">
+                                                <label class="custom-control-label" for="linear2"><small>Linear</small></label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="poly2" %} checked {% endif %} id="poly2" value="poly2" name="deaths_function">
+                                                <label class="custom-control-label" for="poly2"><small>Poly</small></label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="covid2" %} checked {% endif %} id="covid2" value="covid2" name="deaths_function">
+                                                <label class="custom-control-label" for="covid2"><small>Covid</small></label>
+                                        </div>
+                                        <div class="form-group form-row align-items-center">
+                                                <label class="col-auto mb-0" for="for_period_deaths_confirmed"><small>Экстраполировать вперёд на</small></label>
+                                                <input class="form-control col js-for-period" type="number" {% if forec_deaths %} value="{{forec_deaths[1]}}" {% endif %} name="for_period_deaths_confirmed" id="for_period_deaths_confirmed" value="7" placeholder="7" min="3">
+                                                <span class="ml-1"><small>(дни)</small></span>
+                                        </div>
+                                        <div class="form-group form-row align-items-center">
+                                                <label class="col-auto mb-0" for="on_period_deaths_confirmed"><small>Экстраполировать на основе последних</small></label>
+                                                <input class="form-control col js-on-period" type="number"  {% if forec_deaths %} value="{{forec_deaths[2]}}" {% endif %} name="on_period_deaths_confirmed" id="on_period_deaths_confirmed" value="7" placeholder="7" min='4'>
+                                                <span class="ml-1"><small>(дни)</small></span>
+                                        </div>
+                                </div>
 
-                                <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
-                                <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="linear" %} checked {% endif %} id="linear" value="linear" name="confirmed_function">
-                                        <label class="custom-control-label" for="linear"><small>Linear</small></label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="poly" %} checked {% endif %} id="poly" value="poly" name="confirmed_function">
-                                        <label class="custom-control-label" for="poly"><small>Poly</small></label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="covid" %} checked {% endif %} id="covid" value="covid" name="confirmed_function">
-                                        <label class="custom-control-label" for="covid"><small>Covid</small></label>
-                                </div>
-                                <div class="custom-control custom-radio mb-3">
-                                        <input type="radio" class="custom-control-input" {% if not forec_confirmed %} checked {% endif %} id="none" value="" name="confirmed_function">
-                                        <label class="custom-control-label" for="none"><small>None</small></label>
-                                </div>
-                                <div class="form-group form-row align-items-center">
-                                        <label class="col-auto mb-0" for="for_period_confirmed"><small>Экстраполировать вперёд на</small></label>
-                                        <input class="form-control col js-for-period" type="number" {% if forec_confirmed %} value="{{forec_confirmed[1]}}" {% endif %} name="for_period_confirmed" id="for_period_confirmed" value="7" placeholder="7" min="3">
-                                        <span class="ml-1"><small>(дни)</small></span>
-                                </div>
-                                <div class="form-group form-row align-items-center">
-                                        <label class="col-auto mb-0" for="on_period_confirmed"><small>Экстраполировать на основе последних</small></label>
-                                        <input class="form-control col js-on-period" type="number"  {% if forec_confirmed %} value="{{forec_confirmed[2]}}" {% endif %} name="on_period_confirmed" id="on_period_confirmed" value="7" placeholder="7" min='4'>
-                                        <span class="ml-1"><small>(дни)</small></span>
-                                </div>
 
                                 
                         </div>
