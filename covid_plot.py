@@ -1,12 +1,11 @@
+import argparse
+import datetime
 import os
 import sys
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import pandas as pd
-import argparse
 import numpy as np
+import pandas as pd
 from scipy.optimize import curve_fit
-import datetime
 
 
 def func_linear(x, a, b):
