@@ -48,7 +48,7 @@
                         </div>
                         <button class="btn btn-link text-decoration-none text-left d-block mb-3 p-0 js-collapse-input" type="button" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" onclick=""><small class="js-collapse-input-inner">Показать дополнительные настройки (экстраполяция)</small></button>
                         <div class="collapse {% if forec_confirmed or forec_deaths %} forse-opening  {% endif %}" id="collapseExample">
-                                <div class="forec-confirmed js-forec-confirmed-block">
+                                <div class="forec-confirmed js-forec-confirmed-block mb-4 mt-3">
                                         <div class="custom-control custom-checkbox mb-2">
                                                 <input class="custom-control-input js-forec-confirmed" type="checkbox" name="forec-confirmed" value="forec-confirmed" {% if forec_confirmed %} checked {% endif %} id="forec-confirmed">
                                                 <label class="custom-control-label" for="forec-confirmed"><small class="font-weight-bold">Экстраполировать число подтвержденных случаев</small></label>
@@ -77,7 +77,7 @@
                                                 <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                 </div>
-                                <div class="forec-deaths js-forec-deaths-block">
+                                <div class="forec-deaths js-forec-deaths-block mb-4 mt-4">
                                         <div class="custom-control custom-checkbox mb-2">
                                                 <input class="custom-control-input js-forec-deaths" type="checkbox" name="forec-deaths" value="forec-deaths"  {% if forec_deaths %} checked {% endif %}  id="forec-deaths">
                                                 <label class="custom-control-label" for="forec-deaths"><small class="font-weight-bold">Экстраполировать число умерших</small></label>
