@@ -5,6 +5,7 @@
   let textOpened = 'Скрыть дополнительные настройки (экстраполяция)';
   let collapseButton = document.querySelector('.js-collapse-input');
   let collapseButtonInnerEl = document.querySelector('.js-collapse-input-inner');
+  let collapseBlock = document.querySelector('.collapse');
 
   let toggleButtonText = function () {
     if (collapseButton.getAttribute('aria-expanded') === "true") {
@@ -17,6 +18,18 @@
 
   if (collapseButton) {
     collapseButton.addEventListener('click', toggleButtonText);
+
+  }
+  
+  if (collapseBlock) {
+    let forseOpening = function () {
+      if (collapseBlock.classList.contains('forse-opening')) {
+        $('.collapse').collapse('show');
+        collapseBlock.classList.remove('forse-opening');
+      }
+    }
+
+    forseOpening();
   }
 })();
 
@@ -42,23 +55,42 @@
 })();
 
 (function() {
-  let checkboxForecConfirmed = document.querySelector('.js-forec-confirmed');
-  let radioLinearConfirmed = document.querySelector('#linear');
-  let checkboxForecDeaths = document.querySelector('.js-forec-deaths');
-  let radioLinearDeaths = document.querySelector('#linear2');
+  let forecConfirmedBlock = document.querySelector('.js-forec-confirmed-block');
+  let forecDeathsBlock = document.querySelector('.js-forec-deaths-block');
 
-  checkboxForecConfirmed.addEventListener('change', function() {
-    checkboxForecConfirmed.checked ? radioLinearConfirmed.checked = true : radioLinearConfirmed.checked = false;
-  });
+  let changeHandler = function(allInputs, defaultFunction) {
+    if (allInputs[0].checked) {
+      allInputs.forEach(function (input, index) {
+        if (index !== 0)
+        input.disabled = false;        
+      });
+    } else {
+      allInputs.forEach(function (input, index) {
+        if (index !== 0)
+        input.disabled = true;        
+      });
+    }
+  };
+  
+  if (forecConfirmedBlock) {;
+    let forecConfirmedInputs = forecConfirmedBlock.querySelectorAll('input');
 
-  checkboxForecDeaths.addEventListener('change', function() {
-    checkboxForecDeaths.checked ? radioLinearDeaths.checked = true : radioLinearDeaths.checked = false;
-  });
+    forecConfirmedInputs[0].addEventListener('change', function() {
+      changeHandler(forecConfirmedInputs);
+    });  
+  }
+
+  if (forecDeathsBlock) {
+    let forecDeathsInputs = forecDeathsBlock.querySelectorAll('input');
+
+    forecDeathsInputs[0].addEventListener('change', function() {
+      changeHandler(forecDeathsInputs);
+    });  
+  }
+
 })();
 
 (function() {
-  // let descktopSelectSize = '15';
-  // let tabletSelectSize = '5';
   let forPeriodInput = document.querySelector('.js-for-period');
   let forPeriodLabel = document.querySelector('.js-for-period ~ span');
   let onPeriodInput = document.querySelector('.js-on-period');
@@ -100,14 +132,12 @@
   };
 
   if (forPeriodInput && forPeriodLabel) {
-    // changeSelectSize();
     forPeriodInput.addEventListener('input', function () {
       modifyLabelNom(forPeriodInput, forPeriodLabel);
     });
   }
 
   if (onPeriodInput && onPeriodLabel) {
-    // changeSelectSize();
     onPeriodInput.addEventListener('input', function () {
       modifyLabelGen(onPeriodInput, onPeriodLabel);
     });
