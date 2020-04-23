@@ -12,7 +12,7 @@ import hashlib
 
 
 # basedir = '.'
-basedir = '/home/leann/Документы/Frontend/covid19/covid_plot'
+basedir = '/var/www/html/covid/'
 countries_file = path.join(basedir, 'data/countries.json')
 
 covid_service = Blueprint('covid_service', __name__, template_folder='templates')
