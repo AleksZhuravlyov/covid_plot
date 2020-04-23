@@ -13,7 +13,7 @@
         <h1>COVID-PLOT</h1>
         <p class="lead">Графики подтвержденных случаев инфицирования SARS-CoV-2 и смертей от COVID-19</p>
         <div class="row">
-                <form class="col-lg-4 mb-3" method=post>
+                <form class="col-lg-5 mb-3" method=post>
                         <div class="form-group">
                                 <label for="country">Выберите одну или несколько стран:</label>
                                 <select autofocus required name="country" id="country" multiple size="15" class="form-control">
@@ -51,7 +51,7 @@
                                 <div class="forec-confirmed js-forec-confirmed-block">
                                         <div class="custom-control custom-checkbox mb-2">
                                                 <input class="custom-control-input js-forec-confirmed" type="checkbox" name="forec-confirmed" value="forec-confirmed" {% if forec_confirmed %} checked {% endif %} id="forec-confirmed">
-                                                <label class="custom-control-label" for="forec-confirmed"><small>Экстраполировать число подтвержденных случаев</small></label>
+                                                <label class="custom-control-label" for="forec-confirmed"><small class="font-weight-bold">Экстраполировать число подтвержденных случаев</small></label>
                                         </div>
                                         <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
                                         <div class="custom-control custom-radio">
@@ -69,18 +69,18 @@
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="for_period_confirmed"><small>Экстраполировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_confirmed %} value="{{forec_confirmed[1]}}" {% endif %}  {% if not forec_confirmed %} disabled {% endif %} name="for_period_confirmed" id="for_period_confirmed" value="7" placeholder="7" min="3">
-                                                <span class="ml-1"><small>(дни)</small></span>
+                                                <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="on_period_confirmed"><small>Экстраполировать на основе последних</small></label>
                                                 <input class="form-control col js-on-period" type="number"  {% if forec_confirmed %} value="{{forec_confirmed[2]}}" {% endif %} {% if not forec_confirmed %} disabled {% endif %} name="on_period_confirmed" id="on_period_confirmed" value="7" placeholder="7" min='4'>
-                                                <span class="ml-1"><small>(дни)</small></span>
+                                                <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                 </div>
                                 <div class="forec-deaths js-forec-deaths-block">
                                         <div class="custom-control custom-checkbox mb-2">
                                                 <input class="custom-control-input js-forec-deaths" type="checkbox" name="forec-deaths" value="forec-deaths"  {% if forec_deaths %} checked {% endif %}  id="forec-deaths">
-                                                <label class="custom-control-label" for="forec-deaths"><small>Экстраполировать число умерших</small></label>
+                                                <label class="custom-control-label" for="forec-deaths"><small class="font-weight-bold">Экстраполировать число умерших</small></label>
                                         </div>
                                         <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
                                         <div class="custom-control custom-radio">
@@ -98,12 +98,12 @@
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="for_period_deaths"><small>Экстраполировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_deaths %} value="{{forec_deaths[1]}}" {% endif %} {% if not forec_deaths %} disabled {% endif %} name="for_period_deaths" id="for_period_deaths" value="7" placeholder="7" min="3">
-                                                <span class="ml-1"><small>(дни)</small></span>
+                                                <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="on_period_deaths"><small>Экстраполировать на основе последних</small></label>
-                                                <input class="form-control col js-on-period" type="number"  {% if forec_deaths %} value="{{forec_deaths[2]}}" {% endif %} {% if not forec_confirmed %} disabled {% endif %} name="on_period_deaths" id="on_period_deaths" value="7" placeholder="7" min='4'>
-                                                <span class="ml-1"><small>(дни)</small></span>
+                                                <input class="form-control col js-on-period" type="number"  {% if forec_deaths %} value="{{forec_deaths[2]}}" {% endif %} {% if not forec_deaths %} disabled {% endif %} name="on_period_deaths" id="on_period_deaths" value="7" placeholder="7" min='4'>
+                                                <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                 </div>
 
@@ -116,7 +116,7 @@
                         <button type="button" class="btn btn-primary" onclick="window.location.href = '/covid/';">Сбросить</button>
                         {% endif %}
                 </form>
-                <div class="col-lg-8">
+                <div class="col-lg-7">
                         <div>
                         {% if image %}
                                 <img src="data/{{image}}" style="max-width:100%;" class="img-responsive">

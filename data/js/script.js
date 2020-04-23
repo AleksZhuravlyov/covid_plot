@@ -91,10 +91,9 @@
 })();
 
 (function() {
-  let forPeriodInput = document.querySelector('.js-for-period');
-  let forPeriodLabel = document.querySelector('.js-for-period ~ span');
-  let onPeriodInput = document.querySelector('.js-on-period');
-  let onPeriodLabel = document.querySelector('.js-on-period ~ span');
+  let forPeriodInputs = document.querySelectorAll('.js-for-period');
+  let onPeriodInputs = document.querySelectorAll('.js-on-period');
+  let periodLabelClass = '.js-period-label';
 
   let cases = {
     sinNom: 'день',
@@ -102,7 +101,8 @@
     pluGen: 'дней'
   }
 
-  let modifyLabelNom = function (input, label) {
+  let modifyLabelNom = function (input) {
+    let label = input.parentElement.querySelector(periodLabelClass);
     if (input.value % 100 >= 11 && input.value % 100 <= 19) {
       label.textContent = cases.pluGen;
     } else {
@@ -123,7 +123,8 @@
     }
   };
 
-  let modifyLabelGen = function (input, label) {
+  let modifyLabelGen = function (input) {
+    let label = input.parentElement.querySelector(periodLabelClass);
     if (input.value % 10 == 1 && input.value % 100 != 11) {
       label.textContent = cases.sinGen;
     } else {
@@ -131,15 +132,19 @@
     }
   };
 
-  if (forPeriodInput && forPeriodLabel) {
-    forPeriodInput.addEventListener('input', function () {
-      modifyLabelNom(forPeriodInput, forPeriodLabel);
+  if (forPeriodInputs.length) {
+    forPeriodInputs.forEach(element => {
+      element.addEventListener('input', function () {
+        modifyLabelNom(element);
+      });
     });
   }
 
-  if (onPeriodInput && onPeriodLabel) {
-    onPeriodInput.addEventListener('input', function () {
-      modifyLabelGen(onPeriodInput, onPeriodLabel);
+  if (onPeriodInputs.length) {
+    onPeriodInputs.forEach(element => {
+      element.addEventListener('input', function () {
+        modifyLabelGen(element);
+      });
     });
   }
 })();
