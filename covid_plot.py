@@ -130,6 +130,9 @@ def process(args, cases, plot_file_name=False, use_agg=False):
         print(['World'])
         print(regions_all)
         sys.exit(0)
+        
+    if use_agg:
+        plt.switch_backend('Agg')
 
     fig, ax = plt.subplots()
     plt.title('Подтвержденные случаи')
@@ -176,10 +179,7 @@ def process(args, cases, plot_file_name=False, use_agg=False):
     if not args.nonlog:
         plt.yscale('log')
 
-    plt.grid(True)
-
-    if use_agg:
-        mpl.use('Agg')
+    plt.grid(True)    
 
     if plot_file_name:
         plt.savefig(plot_file_name, dpi=150, bbox_inches='tight')
