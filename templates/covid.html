@@ -58,16 +58,16 @@
                                         <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if not forec_confirmed or forec_confirmed and forec_confirmed[0]=="linear" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="linear" value="linear" name="confirmed_function">
-                                                <label class="custom-control-label" for="linear"><small>Linear</small></label>
+                                                <label class="custom-control-label" for="linear"><small>Линейная</small></label>
                                         </div>
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="poly" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="poly" value="poly" name="confirmed_function">
-                                                <label class="custom-control-label" for="poly"><small>Poly</small></label>
+                                                <label class="custom-control-label" for="poly"><small>Полиномиальная</small></label>
                                         </div>
-                                        <div class="custom-control custom-radio">
+                                        <!-- <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="covid" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="covid" value="covid" name="confirmed_function">
                                                 <label class="custom-control-label" for="covid"><small>Covid</small></label>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="for_period_confirmed"><small>Экстраполировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_confirmed %} value="{{forec_confirmed[1]}}" {% endif %}  {% if not forec_confirmed %} disabled {% endif %} name="for_period_confirmed" id="for_period_confirmed" value="7" placeholder="7" min="3">
@@ -86,17 +86,17 @@
                                         </div>
                                         <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
                                         <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if not forec_deaths or forec_deaths and forec_deaths[0]=="linear" %} checked {% endif %}} {% if not forec_deaths %} disabled {% endif %} id="linear2" value="linear2" name="deaths_function">
+                                                <input type="radio" class="custom-control-input" {% if not forec_deaths or forec_deaths and forec_deaths[0]=="linear" %} checked {% endif %}} {% if not forec_deaths %} disabled {% endif %} id="linear2" value="linear" name="deaths_function">
                                                 <label class="custom-control-label" for="linear2"><small>Линейная</small></label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="poly2" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %}id="poly2" value="poly2" name="deaths_function">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="poly" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %}id="poly2" value="poly" name="deaths_function">
                                                 <label class="custom-control-label" for="poly2"><small>Полиномиальная</small></label>
                                         </div>
-                                        <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="covid2" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="covid2" value="covid2" name="deaths_function">
+                                        <!-- <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="covid" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="covid2" value="covid" name="deaths_function">
                                                 <label class="custom-control-label" for="covid2"><small>Covid</small></label>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="for_period_deaths"><small>Экстраполировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_deaths %} value="{{forec_deaths[1]}}" {% endif %} {% if not forec_deaths %} disabled {% endif %} name="for_period_deaths" id="for_period_deaths" value="7" placeholder="7" min="3">
@@ -110,7 +110,6 @@
                                 </div>
 
 
-                                
                         </div>
                         <button class="btn btn-primary" type="submit" value="Построить график по выбранным странам">
                             Построить график</button>
@@ -135,6 +134,6 @@
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <script src='../data/js/script.js'></script>
+        <script src='data/js/script.js'></script>
 </body>
 </html>

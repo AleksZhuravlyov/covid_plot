@@ -36,30 +36,39 @@ def show_plot():
     deaths = True
     current_day = False
     from_date = "2020-03-01"
-    forec_confirmed = list()
+    forec_confirmed = []
+    forec_deaths = []
     if request.method == 'POST':
         chosen_countries = request.form.getlist('country')
         log = request.form.get('log')
         deaths = request.form.get('deaths')
         current_day = request.form.get('current_day')
-        from_date = request.form.get('from_date')             
-        
-        forec_confirmed_func = request.form.get('confirmed_function')        
-        if forec_confirmed_func != '':            
+        from_date = request.form.get('from_date')
+
+        forec_confirmed_checked = request.form.get('forec-confirmed')
+        forec_deaths_checked = request.form.get('forec-deaths')
+        if forec_confirmed_checked:
+            forec_confirmed_func = request.form.get('confirmed_function')
             forec_confirmed.append(forec_confirmed_func)
             forec_confirmed.append(request.form.get('for_period_confirmed'))
-            forec_confirmed.append(request.form.get('on_period_confirmed'))        
-        
+            forec_confirmed.append(request.form.get('on_period_confirmed'))
+
+        if forec_deaths_checked:
+            forec_deaths_func = request.form.get('deaths_function')
+            forec_deaths.append(forec_deaths_func)
+            forec_deaths.append(request.form.get('for_period_deaths'))
+            forec_deaths.append(request.form.get('on_period_deaths'))
+
         nonlog = False
         if not log:
             nonlog = True
-        pass
+
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
                                    countries=all_countries)
         args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day,
                                from_date=from_date, nonlog=nonlog, regions=chosen_countries,
-                               forec_confirmed=forec_confirmed, forec_deaths=[],
+                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
                                forec_current_day=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
 
@@ -78,9 +87,9 @@ def show_plot():
         return render_template("covid.html", image=out_image, countries=all_countries,
                                chosen_countries=chosen_countries, log=log, deaths=deaths,
                                current_day=current_day, from_date=from_date,
-                               forec_confirmed=forec_confirmed)
+                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)
     else:
         return render_template("covid.html", countries=all_countries,
                                chosen_countries=chosen_countries, log=log, deaths=deaths,
                                current_day=current_day, from_date=from_date,
-                               forec_confirmed=forec_confirmed)
+                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)
