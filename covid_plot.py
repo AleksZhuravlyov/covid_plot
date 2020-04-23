@@ -151,8 +151,8 @@ def process(args, cases, plot_file_name=False, use_agg=False):
         if args.deaths or args.forec_deaths:
             cases[cases['Region'] == region].plot(x='Date', y='Deaths',
                                                   linestyle='--', lw=2.1, color=color,
-                                                  ax=ax, label='', marker='o',
-                                                  markersize=2.7)
+                                                  ax=ax, label='', marker=2,
+                                                  markersize=3.5)
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
