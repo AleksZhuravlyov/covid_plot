@@ -21,7 +21,7 @@ base_path = path.join(basedir, 'COVID-19/data')
 cases_file = "cases_time.csv"
 cases_today_file = "cases_country.csv"
 
-with open(countries_file, 'r') as f:
+with open(countries_file, 'r', encoding='utf-8') as f:
     all_countries = json.load(f)
 
 all_countries = sorted(all_countries)
