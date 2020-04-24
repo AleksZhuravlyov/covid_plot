@@ -13,7 +13,7 @@ def func_linear(x, a, b):
 
 
 def func_poly(x, a, b, c, d):
-    return a * x * x * x + b * x * x + c * x + d
+    return a * x**3 + b * x**2 + c * x + d
 
 
 def func_covid(x, a, b, c, d):
@@ -129,7 +129,7 @@ def process(args, cases, plot_file_name=False, use_agg=False):
         print(['World'])
         print(regions_all)
         sys.exit(0)
-        
+
     if use_agg:
         plt.switch_backend('Agg')
 
@@ -143,10 +143,18 @@ def process(args, cases, plot_file_name=False, use_agg=False):
 
         color = next(ax._get_lines.prop_cycler)['color']
 
-        cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
+        if args.countries_data:
+            cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
+                                              linestyle='-', lw=2.1, color=color,
+                                              ax=ax, label=args.countries_data[region]['rus'], marker='o',
+                                              markersize=2.7, )
+        else:
+            cases[cases['Region'] == region].plot(x='Date', y='Confirmed',
                                               linestyle='-', lw=2.1, color=color,
                                               ax=ax, label=region, marker='o',
                                               markersize=2.7, )
+
+
         if args.deaths or args.forec_deaths:
             cases[cases['Region'] == region].plot(x='Date', y='Deaths',
                                                   linestyle='--', lw=2.1, color=color,
@@ -178,7 +186,7 @@ def process(args, cases, plot_file_name=False, use_agg=False):
     if not args.nonlog:
         plt.yscale('log')
 
-    plt.grid(True)    
+    plt.grid(True)
 
     if plot_file_name:
         plt.savefig(plot_file_name, dpi=150, bbox_inches='tight')

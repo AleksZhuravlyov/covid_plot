@@ -29,6 +29,8 @@ w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))
 r_pos = all_countries.index('Russia')
 all_countries.insert(1, all_countries.pop(r_pos))
+d_pos = all_countries.index('Diamond Princess')
+all_countries.insert(-1, all_countries.pop(d_pos))
 
 
 @covid_service.route('/', methods=['GET', 'POST'])
@@ -71,7 +73,7 @@ def show_plot():
         args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day,
                                from_date=from_date, nonlog=nonlog, regions=chosen_countries,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
-                               forec_current_day=[])
+                               forec_current_day=[], countries_data=countries_data)
         cases = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
