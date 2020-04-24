@@ -7,8 +7,7 @@ import json
 import time
 
 
-def getpopulation(query):
-    sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
+def getpopulation(query, sparql):
     sparql.setQuery("""
     SELECT DISTINCT ?item ?itemLabel ?population
     WHERE {
@@ -36,19 +35,22 @@ def getpopulation(query):
 
 countries_file = sys.argv[1]
 
+sparqlpoint = SPARQLWrapper("https://query.wikidata.org/sparql", agent="SPARQLWrapper bot/1.8.5 (https://dev.rus-ltc.org/covid/;covidbot@example.org)")
+
+
 with open(countries_file, 'r') as f:
     countries = json.load(f)
 
 countries2 = {}
 
 for country in countries:
-    time.sleep(5)
+    time.sleep(2)
     print('Processing', country, file=sys.stderr)
-    countries2[country] = {}
-    population, rus_name = getpopulation(country)
+    countries2[country] = {'population': None, 'rus': None}
+    population, rus_name = getpopulation(country, sparqlpoint)
     if population and rus_name:
         countries2[country]['population'] = int(population)
-        countries2[country]['rus'] = int(population)
+        countries2[country]['rus'] = rus_name
     else:
         print('There was an error!', file=sys.stderr)
 
