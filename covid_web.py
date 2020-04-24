@@ -22,11 +22,13 @@ cases_file = "cases_time.csv"
 cases_today_file = "cases_country.csv"
 
 with open(countries_file, 'r', encoding='utf-8') as f:
-    all_countries = json.load(f)
+    countries_data = json.load(f)
 
-all_countries = sorted(all_countries)
+all_countries = [el[0] for el in sorted(countries_data.items(), key=lambda x: x[1]['rus'])]
 w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))
+r_pos = all_countries.index('Russia')
+all_countries.insert(1, all_countries.pop(r_pos))
 
 
 @covid_service.route('/', methods=['GET', 'POST'])
@@ -65,7 +67,7 @@ def show_plot():
 
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
-                                   countries=all_countries)
+                                   countries=all_countries, countries_data=countries_data)
         args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day,
                                from_date=from_date, nonlog=nonlog, regions=chosen_countries,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
@@ -85,11 +87,11 @@ def show_plot():
         if not path.isfile(imagepath):
             _ = process(args, cases, plot_file_name=imagepath, use_agg=True)
         return render_template("covid.html", image=out_image, countries=all_countries,
-                               chosen_countries=chosen_countries, log=log, deaths=deaths,
-                               current_day=current_day, from_date=from_date,
+                               countries_data=countries_data, chosen_countries=chosen_countries,
+                               log=log, deaths=deaths, current_day=current_day, from_date=from_date,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)
     else:
-        return render_template("covid.html", countries=all_countries,
+        return render_template("covid.html", countries=all_countries, countries_data=countries_data,
                                chosen_countries=chosen_countries, log=log, deaths=deaths,
                                current_day=current_day, from_date=from_date,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)

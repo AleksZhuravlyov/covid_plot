@@ -35,7 +35,9 @@ def getpopulation(query, sparql):
 
 countries_file = sys.argv[1]
 
-sparqlpoint = SPARQLWrapper("https://query.wikidata.org/sparql", agent="SPARQLWrapper bot/1.8.5 (https://dev.rus-ltc.org/covid/;covidbot@example.org)")
+sparqlpoint = SPARQLWrapper("https://query.wikidata.org/sparql",
+                            agent="SPARQLWrapper bot/1.8.5 "
+                                  "(https://dev.rus-ltc.org/covid/;covidbot@example.org)")
 
 
 with open(countries_file, 'r') as f:

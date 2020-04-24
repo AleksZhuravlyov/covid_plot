@@ -19,7 +19,7 @@
                                 <select autofocus required name="country" id="country" multiple size="15" class="form-control">
                                         {%- for country in countries %}
                                         <option value = "{{ country }}" {% if country in chosen_countries %} selected {% endif %}>
-                                        {{ country }}
+                                        {{ countries_data[country]['rus'] }}
                                         </option>
                                         {% endfor %}
                                 </select>
@@ -86,11 +86,11 @@
                                         </div>
                                         <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
                                         <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if not forec_deaths or forec_deaths and forec_deaths[0]=="linear" %} checked {% endif %}} {% if not forec_deaths %} disabled {% endif %} id="linear2" value="linear" name="deaths_function">
+                                                <input type="radio" class="custom-control-input" {% if not forec_deaths or forec_deaths and forec_deaths[0]=="linear" %} checked {% endif %} {% if not forec_deaths %} disabled {% endif %} id="linear2" value="linear" name="deaths_function">
                                                 <label class="custom-control-label" for="linear2"><small>Линейная</small></label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="poly" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %}id="poly2" value="poly" name="deaths_function">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="poly" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="poly2" value="poly" name="deaths_function">
                                                 <label class="custom-control-label" for="poly2"><small>Полиномиальная</small></label>
                                         </div>
                                         <!-- <div class="custom-control custom-radio">
