@@ -73,7 +73,7 @@ def show_plot():
         args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day,
                                from_date=from_date, nonlog=nonlog, regions=chosen_countries,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
-                               forec_current_day=[], countries_data=countries_data)
+                               forec_current_day=[])
         cases = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
@@ -87,7 +87,8 @@ def show_plot():
 
         imagepath = path.join(basedir, 'data', out_image)
         if not path.isfile(imagepath):
-            _ = process(args, cases, plot_file_name=imagepath, use_agg=True)
+            _ = process(args, cases, plot_file_name=imagepath, use_agg=True,
+                        countries_data=countries_data)
         return render_template("covid.html", image=out_image, countries=all_countries,
                                countries_data=countries_data, chosen_countries=chosen_countries,
                                log=log, deaths=deaths, current_day=current_day, from_date=from_date,
