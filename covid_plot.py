@@ -131,7 +131,7 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
         sys.exit(0)
 
     if not countries_data:
-        countries_data = {r: {'rus': r} for r in regions}
+        countries_data = {r: {'country_ru': r} for r in regions}
 
     if use_agg:
         plt.switch_backend('Agg')
@@ -148,7 +148,7 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
 
         cases[cases['Place'] == region].plot(x='Date', y='Confirmed', linestyle='-', lw=2.1,
                                               color=color, ax=ax, marker='o', markersize=2.7,
-                                              label=countries_data[region]['rus'])
+                                              label=countries_data[region]['country_ru'])
 
         if args.deaths or args.forec_deaths:
             cases[cases['Place'] == region].plot(x='Date', y='Deaths',

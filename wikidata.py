@@ -48,11 +48,11 @@ countries2 = {}
 for country in countries:
     time.sleep(2)
     print('Processing', country, file=sys.stderr)
-    countries2[country] = {'population': None, 'rus': None}
+    countries2[country] = {'population': None, 'country_ru': None}
     population, rus_name = getpopulation(country, sparqlpoint)
     if population and rus_name:
         countries2[country]['population'] = int(population)
-        countries2[country]['rus'] = rus_name
+        countries2[country]['country_ru'] = rus_name
     else:
         print('There was an error!', file=sys.stderr)
 

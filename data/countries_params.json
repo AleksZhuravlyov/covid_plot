@@ -1,0 +1,1118 @@
+{
+    "Afghanistan": {
+        "country_ru": "Афганистан",
+        "population": 34940837,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Albania": {
+        "country_ru": "Албания",
+        "population": 3020209,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Algeria": {
+        "country_ru": "Алжир",
+        "population": 41318142,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "Andorra": {
+        "country_ru": "Андорра",
+        "population": 76177,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Angola": {
+        "country_ru": "Ангола",
+        "population": 29784193,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Antigua and Barbuda": {
+        "country_ru": "Антигуа и Барбуда",
+        "population": 102012,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Argentina": {
+        "country_ru": "Аргентина",
+        "population": 44938712,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Armenia": {
+        "country_ru": "Армения",
+        "population": 2930450,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Australia": {
+        "country_ru": "Австралия",
+        "population": 24511800,
+        "region": "Oceania",
+        "subregion": "Australia and New Zealand"
+    },
+    "Austria": {
+        "country_ru": "Австрия",
+        "population": 8809212,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Azerbaijan": {
+        "country_ru": "Азербайджан",
+        "population": 10000000,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Bahamas": {
+        "country_ru": "Багамские острова",
+        "population": 385637,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Bahrain": {
+        "country_ru": "Бахрейн",
+        "population": 1492584,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Bangladesh": {
+        "country_ru": "Бангладеш",
+        "population": 164669751,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Barbados": {
+        "country_ru": "Барбадос",
+        "population": 285719,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Belarus": {
+        "country_ru": "Белоруссия",
+        "population": 9408400,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Belgium": {
+        "country_ru": "Бельгия",
+        "population": 11431406,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Belize": {
+        "country_ru": "Белиз",
+        "population": 374681,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Benin": {
+        "country_ru": "Бенин",
+        "population": 11175692,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Bhutan": {
+        "country_ru": "Бутан",
+        "population": 807610,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Bolivia": {
+        "country_ru": "Боливия",
+        "population": 11051600,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Bosnia and Herzegovina": {
+        "country_ru": "Босния и Герцеговина",
+        "population": 3507017,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Botswana": {
+        "country_ru": "Ботсвана",
+        "population": 2254068,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Brazil": {
+        "country_ru": "Бразилия",
+        "population": 210147125,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Brunei": {
+        "country_ru": "Бруней",
+        "population": 428697,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Bulgaria": {
+        "country_ru": "Болгария",
+        "population": 7000039,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Burkina Faso": {
+        "country_ru": "Буркина-Фасо",
+        "population": 19193382,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Burma": {
+        "country_ru": "Мьянма",
+        "population": 53582855,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Burundi": {
+        "country_ru": "Бурунди",
+        "population": 11745876,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Cabo Verde": {
+        "country_ru": "Кабо-Верде",
+        "population": 543767,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Cambodia": {
+        "country_ru": "Камбоджа",
+        "population": 16005373,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Cameroon": {
+        "country_ru": "Камерун",
+        "population": 24053727,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Canada": {
+        "country_ru": "Канада",
+        "population": 35702707,
+        "region": "Americas",
+        "subregion": "Northern America"
+    },
+    "Central African Republic": {
+        "country_ru": "Центральноафриканская Республика",
+        "population": 4659080,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Chad": {
+        "country_ru": "Чад",
+        "population": 15477751,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Chile": {
+        "country_ru": "Чили",
+        "population": 18054726,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "China": {
+        "country_ru": "Китай",
+        "population": 1427647786,
+        "region": "Asia",
+        "subregion": "Eastern Asia"
+    },
+    "Colombia": {
+        "country_ru": "Колумбия",
+        "population": 49065615,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Congo (Brazzaville)": {
+        "country_ru": "Республика Конго",
+        "population": 5244359,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Congo (Kinshasa)": {
+        "country_ru": "Киншаса",
+        "population": 11855000,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Costa Rica": {
+        "country_ru": "Коста-Рика",
+        "population": 4905769,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Cote d'Ivoire": {
+        "country_ru": "Кот-д’Ивуар",
+        "population": 23740424,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Croatia": {
+        "country_ru": "Хорватия",
+        "population": 4105493,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Cuba": {
+        "country_ru": "Куба",
+        "population": 11484636,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Cyprus": {
+        "country_ru": "Кипр",
+        "population": 1189265,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Czechia": {
+        "country_ru": "Чехия",
+        "population": 10649800,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Denmark": {
+        "country_ru": "Дания",
+        "population": 5827463,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Diamond Princess": {
+        "country_ru": "Diamond Princess",
+        "population": 3711,
+        "region": "Cruise ships",
+        "subregion": "Cruise Ships"
+    },
+    "Djibouti": {
+        "country_ru": "Джибути",
+        "population": 956985,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Dominica": {
+        "country_ru": "Доминика",
+        "population": 73925,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Dominican Republic": {
+        "country_ru": "Доминиканская Республика",
+        "population": 10403761,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Ecuador": {
+        "country_ru": "Эквадор",
+        "population": 16624858,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Egypt": {
+        "country_ru": "Египет",
+        "population": 94798827,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "El Salvador": {
+        "country_ru": "Сальвадор",
+        "population": 6420746,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Equatorial Guinea": {
+        "country_ru": "Экваториальная Гвинея",
+        "population": 1267689,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Eritrea": {
+        "country_ru": "Эритрея",
+        "population": 3497000,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Estonia": {
+        "country_ru": "Эстония",
+        "population": 1324820,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Eswatini": {
+        "country_ru": "Эсватини",
+        "population": 1367254,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Ethiopia": {
+        "country_ru": "Эфиопия",
+        "population": 104957438,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Fiji": {
+        "country_ru": "Фиджи",
+        "population": 905502,
+        "region": "Oceania",
+        "subregion": "Melanesia"
+    },
+    "Finland": {
+        "country_ru": "Финляндия",
+        "population": 5501043,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "France": {
+        "country_ru": "Франция",
+        "population": 66628000,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Gabon": {
+        "country_ru": "Габон",
+        "population": 2025137,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Gambia": {
+        "country_ru": "Гамбия",
+        "population": 2051363,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Georgia": {
+        "country_ru": "Грузия",
+        "population": 3717100,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Germany": {
+        "country_ru": "Германия",
+        "population": 83149300,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Ghana": {
+        "country_ru": "Гана",
+        "population": 26908262,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Greece": {
+        "country_ru": "Греция",
+        "population": 10760421,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Grenada": {
+        "country_ru": "Гренада",
+        "population": 107825,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Guatemala": {
+        "country_ru": "Гватемала",
+        "population": 17263239,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Guinea": {
+        "country_ru": "Гвинея",
+        "population": 12717176,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Guinea-Bissau": {
+        "country_ru": "Гвинея-Бисау",
+        "population": 1861283,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Guyana": {
+        "country_ru": "Гайана",
+        "population": 777859,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Haiti": {
+        "country_ru": "Республика Гаити",
+        "population": 10981229,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Holy See": {
+        "country_ru": "Святой Престол",
+        "population": 801,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Honduras": {
+        "country_ru": "Гондурас",
+        "population": 9265067,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Hungary": {
+        "country_ru": "Венгрия",
+        "population": 9772756,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Iceland": {
+        "country_ru": "Исландия",
+        "population": 357050,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "India": {
+        "country_ru": "Индия",
+        "population": 1349217956,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Indonesia": {
+        "country_ru": "Индонезия",
+        "population": 263991379,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Iran": {
+        "country_ru": "Иран",
+        "population": 79966230,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Iraq": {
+        "country_ru": "Ирак",
+        "population": 38274618,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Ireland": {
+        "country_ru": "Ирландия",
+        "population": 4761865,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Israel": {
+        "country_ru": "Израиль",
+        "population": 9093000,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Italy": {
+        "country_ru": "Италия",
+        "population": 60317000,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Jamaica": {
+        "country_ru": "Ямайка",
+        "population": 2890299,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Japan": {
+        "country_ru": "Япония",
+        "population": 126785797,
+        "region": "Asia",
+        "subregion": "Eastern Asia"
+    },
+    "Jordan": {
+        "country_ru": "Иордания",
+        "population": 10428241,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Kazakhstan": {
+        "country_ru": "Казахстан",
+        "population": 18276500,
+        "region": "Asia",
+        "subregion": "Central Asia"
+    },
+    "Kenya": {
+        "country_ru": "Кения",
+        "population": 48468138,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Korea, South": {
+        "country_ru": "Южная Корея",
+        "population": 51709098,
+        "region": "Asia",
+        "subregion": "Eastern Asia"
+    },
+    "Kosovo": {
+        "country_ru": "Косово",
+        "population": 1810463,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Kuwait": {
+        "country_ru": "Кувейт",
+        "population": 4600000,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Kyrgyzstan": {
+        "country_ru": "Киргизия",
+        "population": 6201500,
+        "region": "Asia",
+        "subregion": "Central Asia"
+    },
+    "Laos": {
+        "country_ru": "Лаос",
+        "population": 6858160,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Latvia": {
+        "country_ru": "Латвия",
+        "population": 1909000,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Lebanon": {
+        "country_ru": "Ливан",
+        "population": 6100075,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Liberia": {
+        "country_ru": "Либерия",
+        "population": 4731906,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Libya": {
+        "country_ru": "Ливия",
+        "population": 6678567,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "Liechtenstein": {
+        "country_ru": "Лихтенштейн",
+        "population": 37922,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Lithuania": {
+        "country_ru": "Литва",
+        "population": 2790842,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Luxembourg": {
+        "country_ru": "Люксембург",
+        "population": 626108,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "MS Zaandam": {
+        "country_ru": "MS Zaandam",
+        "population": 1829,
+        "region": "Cruise ships",
+        "subregion": "Cruise Ships"
+    },
+    "Madagascar": {
+        "country_ru": "Мадагаскар",
+        "population": 25570895,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Malawi": {
+        "country_ru": "Малави",
+        "population": 18143217,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Malaysia": {
+        "country_ru": "Малайзия",
+        "population": 31624264,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Maldives": {
+        "country_ru": "Мальдивы",
+        "population": 436330,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Mali": {
+        "country_ru": "Мали",
+        "population": 18541980,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Malta": {
+        "country_ru": "Мальта",
+        "population": 465292,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Mauritania": {
+        "country_ru": "Мавритания",
+        "population": 4420184,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Mauritius": {
+        "country_ru": "Маврикий",
+        "population": 1264613,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Mexico": {
+        "country_ru": "Мексика",
+        "population": 130526945,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Moldova": {
+        "country_ru": "Молдавия",
+        "population": 2550900,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Monaco": {
+        "country_ru": "Монако",
+        "population": 38695,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Mongolia": {
+        "country_ru": "Монголия",
+        "population": 3075647,
+        "region": "Asia",
+        "subregion": "Eastern Asia"
+    },
+    "Montenegro": {
+        "country_ru": "Черногория",
+        "population": 622359,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Morocco": {
+        "country_ru": "Марокко",
+        "population": 36029138,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "Mozambique": {
+        "country_ru": "Мозамбик",
+        "population": 29668834,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Namibia": {
+        "country_ru": "Намибия",
+        "population": 2533794,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Nepal": {
+        "country_ru": "Непал",
+        "population": 29400000,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Netherlands": {
+        "country_ru": "Нидерланды",
+        "population": 17424978,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "New Zealand": {
+        "country_ru": "Новая Зеландия",
+        "population": 4942500,
+        "region": "Oceania",
+        "subregion": "Australia and New Zealand"
+    },
+    "Nicaragua": {
+        "country_ru": "Никарагуа",
+        "population": 6217581,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Niger": {
+        "country_ru": "Нигер",
+        "population": 21477348,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Nigeria": {
+        "country_ru": "Нигерия",
+        "population": 190886311,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "North Macedonia": {
+        "country_ru": "Северная Македония",
+        "population": 2075301,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Norway": {
+        "country_ru": "Норвегия",
+        "population": 5367580,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Oman": {
+        "country_ru": "Оман",
+        "population": 4829480,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Pakistan": {
+        "country_ru": "Пакистан",
+        "population": 197015955,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Panama": {
+        "country_ru": "Панама",
+        "population": 4098587,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Papua New Guinea": {
+        "country_ru": "Папуа — Новая Гвинея",
+        "population": 8251162,
+        "region": "Oceania",
+        "subregion": "Melanesia"
+    },
+    "Paraguay": {
+        "country_ru": "Парагвай",
+        "population": 6811297,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Peru": {
+        "country_ru": "Перу",
+        "population": 29381884,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Philippines": {
+        "country_ru": "Филиппины",
+        "population": 104918090,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Poland": {
+        "country_ru": "Польша",
+        "population": 38433600,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Portugal": {
+        "country_ru": "Португалия",
+        "population": 10600000,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Qatar": {
+        "country_ru": "Катар",
+        "population": 2639211,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Romania": {
+        "country_ru": "Румыния",
+        "population": 19586539,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Russia": {
+        "country_ru": "Россия",
+        "population": 146804372,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Rwanda": {
+        "country_ru": "Руанда",
+        "population": 12208407,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Saint Kitts and Nevis": {
+        "country_ru": "Сент-Китс и Невис",
+        "population": 55345,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Saint Lucia": {
+        "country_ru": "Сент-Люсия",
+        "population": 178844,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Saint Vincent and the Grenadines": {
+        "country_ru": "Сент-Винсент и Гренадины",
+        "population": 109897,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "San Marino": {
+        "country_ru": "Сан-Марино",
+        "population": 33400,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Sao Tome and Principe": {
+        "country_ru": "Сан-Томе и Принсипи",
+        "population": 211028,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Saudi Arabia": {
+        "country_ru": "Саудовская Аравия",
+        "population": 33000000,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Senegal": {
+        "country_ru": "Сенегал",
+        "population": 15850567,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Serbia": {
+        "country_ru": "Сербия",
+        "population": 7022268,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Seychelles": {
+        "country_ru": "Сейшельские Острова",
+        "population": 95843,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Sierra Leone": {
+        "country_ru": "Сьерра-Леоне",
+        "population": 7947675,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Singapore": {
+        "country_ru": "Сингапур",
+        "population": 5888926,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Slovakia": {
+        "country_ru": "Словакия",
+        "population": 5439892,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "Slovenia": {
+        "country_ru": "Словения",
+        "population": 2066880,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Somalia": {
+        "country_ru": "Сомали",
+        "population": 11031386,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "South Africa": {
+        "country_ru": "ЮАР",
+        "population": 57725600,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "South Sudan": {
+        "country_ru": "Южный Судан",
+        "population": 10975927,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Spain": {
+        "country_ru": "Испания",
+        "population": 46528024,
+        "region": "Europe",
+        "subregion": "Southern Europe"
+    },
+    "Sri Lanka": {
+        "country_ru": "Шри-Ланка",
+        "population": 21444000,
+        "region": "Asia",
+        "subregion": "Southern Asia"
+    },
+    "Sudan": {
+        "country_ru": "Судан",
+        "population": 40533330,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "Suriname": {
+        "country_ru": "Суринам",
+        "population": 563402,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Sweden": {
+        "country_ru": "Швеция",
+        "population": 10327589,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Switzerland": {
+        "country_ru": "Швейцария",
+        "population": 8466017,
+        "region": "Europe",
+        "subregion": "Western Europe"
+    },
+    "Syria": {
+        "country_ru": "Сирия",
+        "population": 18269868,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Taiwan*": {
+        "country_ru": "Тайвань",
+        "population": 23780452,
+        "region": "Asia",
+        "subregion": "Eastern Asia"
+    },
+    "Tanzania": {
+        "country_ru": "Танзания",
+        "population": 57310019,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Thailand": {
+        "country_ru": "Таиланд",
+        "population": 65931550,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Timor-Leste": {
+        "country_ru": "Восточный Тимор",
+        "population": 1183643,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "Togo": {
+        "country_ru": "Того",
+        "population": 7797694,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Trinidad and Tobago": {
+        "country_ru": "Тринидад и Тобаго",
+        "population": 1369125,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Tunisia": {
+        "country_ru": "Тунис",
+        "population": 11565204,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "Turkey": {
+        "country_ru": "Турция",
+        "population": 82003882,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "US": {
+        "country_ru": "США",
+        "population": 328239523,
+        "region": "Americas",
+        "subregion": "Northern America"
+    },
+    "Uganda": {
+        "country_ru": "Уганда",
+        "population": 42862958,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Ukraine": {
+        "country_ru": "Украина",
+        "population": 42558328,
+        "region": "Europe",
+        "subregion": "Eastern Europe"
+    },
+    "United Arab Emirates": {
+        "country_ru": "Объединённые Арабские Эмираты",
+        "population": 9400145,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "United Kingdom": {
+        "country_ru": "Великобритания",
+        "population": 66022273,
+        "region": "Europe",
+        "subregion": "Northern Europe"
+    },
+    "Uruguay": {
+        "country_ru": "Уругвай",
+        "population": 3456750,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Uzbekistan": {
+        "country_ru": "Узбекистан",
+        "population": 32387200,
+        "region": "Asia",
+        "subregion": "Central Asia"
+    },
+    "Venezuela": {
+        "country_ru": "Венесуэла",
+        "population": 28515829,
+        "region": "Americas",
+        "subregion": "Latin America and the Caribbean"
+    },
+    "Vietnam": {
+        "country_ru": "Вьетнам",
+        "population": 94660000,
+        "region": "Asia",
+        "subregion": "South-eastern Asia"
+    },
+    "West Bank and Gaza": {
+        "country_ru": "Западный Берег и Сектор Газа",
+        "population": 5190143,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Western Sahara": {
+        "country_ru": "Западная Сахара",
+        "population": 567402,
+        "region": "Africa",
+        "subregion": "Northern Africa"
+    },
+    "World": {
+		"country_ru": "Весь мир",
+        "population": 7780000000,
+        "region": "World",
+        "subregion": "World"        
+    },
+    "Yemen": {
+        "country_ru": "Йемен",
+        "population": 28498683,
+        "region": "Asia",
+        "subregion": "Western Asia"
+    },
+    "Zambia": {
+        "country_ru": "Замбия",
+        "population": 17094130,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
+    "Zimbabwe": {
+        "country_ru": "Зимбабве",
+        "population": 16529904,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    }
+}

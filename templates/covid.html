@@ -19,7 +19,7 @@
                                 <select autofocus required name="country" id="country" multiple size="15" class="form-control">
                                         {%- for country in countries %}
                                         <option value = "{{ country }}" {% if country in chosen_countries %} selected {% endif %}>
-                                        {{ countries_data[country]['rus'] }}
+                                        {{ countries_data[country]['country_ru'] }}
                                         </option>
                                         {% endfor %}
                                 </select>

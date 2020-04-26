@@ -13,7 +13,7 @@ import hashlib
 
 # basedir = '.'
 basedir = '/var/www/html/covid/'
-countries_file = path.join(basedir, 'data/countries.json')
+countries_file = path.join(basedir, 'data/countries_params.json')
 
 covid_service = Blueprint('covid_service', __name__, template_folder='templates')
 
@@ -23,14 +23,23 @@ cases_today_file = "cases_country.csv"
 
 with open(countries_file, 'r', encoding='utf-8') as f:
     countries_data = json.load(f)
+    
 
-all_countries = [el[0] for el in sorted(countries_data.items(), key=lambda x: x[1]['rus'])]
+
+all_countries = [el[0] for el in sorted(countries_data.items(), key=lambda x: x[1]['country_ru'])]
+print(all_countries)
+
 w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))
+
 r_pos = all_countries.index('Russia')
 all_countries.insert(1, all_countries.pop(r_pos))
+
 d_pos = all_countries.index('Diamond Princess')
-all_countries.insert(-1, all_countries.pop(d_pos))
+all_countries.insert(len(all_countries), all_countries.pop(d_pos))
+
+d_pos = all_countries.index('MS Zaandam')
+all_countries.insert(len(all_countries), all_countries.pop(d_pos))
 
 
 @covid_service.route('/', methods=['GET', 'POST'])
