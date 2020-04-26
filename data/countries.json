@@ -674,5 +674,73 @@
     "Syria": {
         "population": 18269868,
         "rus": "Сирия"
+    },
+    "Congo (Brazzaville)": {
+        "population": 5244359,
+        "rus": "Республика Конго"
+    },
+    "Congo (Kinshasa)": {
+        "population": 11855000,
+        "rus": "Киншаса"
+    },
+    "Sierra Leone": {
+        "population": 7947675,
+        "rus": "Сьерра-Леоне"
+    },
+    "Gambia": {
+        "population": 2051363,
+        "rus": "Гамбия"
+    },
+    "South Sudan": {
+        "population": 10975927,
+        "rus": "Южный Судан"
+    },
+    "Sao Tome and Principe": {
+        "population": 211028,
+        "rus": "Сан-Томе и Принсипи"
+    },
+    "Burundi": {
+        "population": 11745876,
+        "rus": "Бурунди"
+    },
+    "Timor-Leste": {
+        "population": 1183643,
+        "rus": "Восточный Тимор"
+    },
+    "West Bank and Gaza": {
+        "population": 5190143,
+        "rus": "Западный Берег и Сектор Газа"
+    },
+    "Yemen": {
+        "population": 28498683,
+        "rus": "Йемен"
+    },
+    "Cabo Verde": {
+        "population": 543767,
+        "rus": "Кабо-Верде"
+    },
+    "Holy See": {
+        "population": 801,
+        "rus": "Святой Престол"
+    },
+    "Botswana": {
+        "population": 2254068,
+        "rus": "Ботсвана"
+    },
+    "Western Sahara": {
+        "population": 567402,
+        "rus": "Западная Сахара"
+    },
+    "MS Zaandam": {
+        "population": 1829,
+        "rus": "MS Zaandam"
+    },
+    "Cote d'Ivoire": {
+        "population": 23740424,
+        "rus": "Кот-д’Ивуар"
+    },
+    "Malawi": {
+        "population": 18143217,
+        "rus": "Малави"
     }
 }

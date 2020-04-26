@@ -82,7 +82,7 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
 
 
 def preprocess(args, bpath, cfile, ctodayfile):
-    rename_dict = {'Country_Region': 'Region', 'Last_Update': 'Date'}
+    rename_dict = {'Country_Region': 'Place', 'Last_Update': 'Date'}
     drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered',  'Incident_Rate',
                              'People_Tested', 'People_Hospitalized', 'Mortality_Rate',
                              'UID', 'ISO3']
@@ -90,7 +90,7 @@ def preprocess(args, bpath, cfile, ctodayfile):
                        'Incident_Rate', 'People_Tested', 'People_Hospitalized', 'Province_State',
                        'FIPS', 'UID', 'iso3', 'Report_Date_String']
 
-    cases = pd.read_csv(os.path.join(bpath, cfile))
+    cases = pd.read_csv(os.path.join(bpath, cfile))    
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases[cases['UID'] != 840]
     cases = cases.drop(columns=drop_list_cases)
@@ -98,7 +98,7 @@ def preprocess(args, bpath, cfile, ctodayfile):
 
     if 'World' in set(args.regions):
         world = cases.groupby(['Date']).sum()
-        world['Region'] = 'World'
+        world['Place'] = 'World'
         world['Date'] = world.index
         cases = cases.append(world, ignore_index=True, sort=True)
 
@@ -110,14 +110,14 @@ def preprocess(args, bpath, cfile, ctodayfile):
         cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
         cases = cases.append(cases_today, ignore_index=True, sort=True)
 
-    cases = cases.groupby(['Date', 'Region']).sum().reset_index()
-    cases = cases.sort_values(by=['Region', 'Date'])
+    cases = cases.groupby(['Date', 'Place']).sum().reset_index()
+    cases = cases.sort_values(by=['Place', 'Date'])
 
     return cases
 
 
 def process(args, cases, plot_file_name=False, use_agg=False, countries_data=None):
-    regions_all = sorted(set(cases['Region'].values.tolist()))
+    regions_all = sorted(set(cases['Place'].values.tolist()))
     regions = sorted(list(set(regions_all) & set(args.regions)))
 
     if len(regions) == 0:
@@ -127,7 +127,7 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
 
     if args.list:
         print(['World'])
-        print(regions_all)
+        print(regions_all)        
         sys.exit(0)
 
     if not countries_data:
@@ -146,25 +146,25 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
 
         color = next(ax._get_lines.prop_cycler)['color']
 
-        cases[cases['Region'] == region].plot(x='Date', y='Confirmed', linestyle='-', lw=2.1,
+        cases[cases['Place'] == region].plot(x='Date', y='Confirmed', linestyle='-', lw=2.1,
                                               color=color, ax=ax, marker='o', markersize=2.7,
                                               label=countries_data[region]['rus'])
 
         if args.deaths or args.forec_deaths:
-            cases[cases['Region'] == region].plot(x='Date', y='Deaths',
+            cases[cases['Place'] == region].plot(x='Date', y='Deaths',
                                                   linestyle='--', lw=2.1, color=color,
                                                   ax=ax, label='', marker=2,
                                                   markersize=3.5)
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
-            forecast(args.forec_confirmed, cases[cases['Region'] == region],
+            forecast(args.forec_confirmed, cases[cases['Place'] == region],
                      field_name='Confirmed', ax=ax, color=color,
                      forec_current_day=args.forec_current_day)
 
         # forecast and plot deaths
         if args.forec_deaths:
-            forecast(args.forec_deaths, cases[cases['Region'] == region],
+            forecast(args.forec_deaths, cases[cases['Place'] == region],
                      field_name='Deaths', ax=ax, color=color,
                      forec_current_day=args.forec_current_day)
 
