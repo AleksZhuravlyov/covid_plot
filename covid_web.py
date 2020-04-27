@@ -23,11 +23,10 @@ cases_today_file = "cases_country.csv"
 
 with open(countries_file, 'r', encoding='utf-8') as f:
     countries_data = json.load(f)
-    
+
 
 
 all_countries = [el[0] for el in sorted(countries_data.items(), key=lambda x: x[1]['country_ru'])]
-print(all_countries)
 
 w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))

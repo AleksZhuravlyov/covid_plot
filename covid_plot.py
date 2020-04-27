@@ -90,7 +90,7 @@ def preprocess(args, bpath, cfile, ctodayfile):
                        'Incident_Rate', 'People_Tested', 'People_Hospitalized', 'Province_State',
                        'FIPS', 'UID', 'iso3', 'Report_Date_String']
 
-    cases = pd.read_csv(os.path.join(bpath, cfile))    
+    cases = pd.read_csv(os.path.join(bpath, cfile))
     cases.rename(columns=rename_dict, inplace=True)
     cases = cases[cases['UID'] != 840]
     cases = cases.drop(columns=drop_list_cases)
@@ -127,7 +127,7 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
 
     if args.list:
         print(['World'])
-        print(regions_all)        
+        print(regions_all)
         sys.exit(0)
 
     if not countries_data:
