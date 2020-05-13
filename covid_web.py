@@ -10,7 +10,6 @@ from flask import request
 from process_procedures import process, preprocess
 import hashlib
 
-
 # basedir = '.'
 basedir = '/var/www/html/covid/'
 countries_file = path.join(basedir, 'data/countries_params.json')
@@ -24,9 +23,8 @@ cases_today_file = "cases_country.csv"
 with open(countries_file, 'r', encoding='utf-8') as f:
     countries_data = json.load(f)
 
-
-
-all_countries = [el[0] for el in sorted(countries_data.items(), key=lambda x: x[1]['country_ru'])]
+all_countries = [el[0] for el in
+                 sorted(countries_data.items(), key=lambda x: x[1]['country_ru'])]
 
 w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))
@@ -45,6 +43,7 @@ all_countries.insert(len(all_countries), all_countries.pop(d_pos))
 def show_plot():
     chosen_countries = []
     log = True
+    abs = False
     deaths = True
     current_day = False
     from_date = "2020-03-01"
@@ -75,14 +74,19 @@ def show_plot():
         if not log:
             nonlog = True
 
+        nonabs = False
+        if not abs:
+            nonabs = True
+
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
                                    countries=all_countries, countries_data=countries_data)
         args = SimpleNamespace(deaths=deaths, list=False, current_day=current_day,
-                               from_date=from_date, nonlog=nonlog, regions=chosen_countries,
+                               from_date=from_date, nonlog=nonlog,
+                               regions=chosen_countries,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
-                               forec_current_day=[])
-        cases = preprocess(args, base_path, cases_file, cases_today_file)
+                               forec_current_day=[], nonabs=nonabs)
+        cases, cases_today = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
         params = '_'.join([str(getattr(args, i)) for i in vars(args)])
@@ -95,14 +99,17 @@ def show_plot():
 
         imagepath = path.join(basedir, 'data', out_image)
         if not path.isfile(imagepath):
-            _ = process(args, cases, plot_file_name=imagepath, use_agg=True,
-                        countries_data=countries_data)
+            _ = process(args, cases, cases_today, countries_data,
+                        plot_file_name=imagepath, use_agg=True)
         return render_template("covid.html", image=out_image, countries=all_countries,
-                               countries_data=countries_data, chosen_countries=chosen_countries,
-                               log=log, deaths=deaths, current_day=current_day, from_date=from_date,
+                               countries_data=countries_data,
+                               chosen_countries=chosen_countries,
+                               log=log, deaths=deaths, current_day=current_day,
+                               from_date=from_date,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)
     else:
-        return render_template("covid.html", countries=all_countries, countries_data=countries_data,
+        return render_template("covid.html", countries=all_countries,
+                               countries_data=countries_data,
                                chosen_countries=chosen_countries, log=log, deaths=deaths,
                                current_day=current_day, from_date=from_date,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)

@@ -233,6 +233,12 @@
         "region": "Africa",
         "subregion": "Sub-Saharan Africa"
     },
+    "Comoros": {
+        "country_ru": "Республика Конго",
+        "population": 850688,
+        "region": "Africa",
+        "subregion": "Sub-Saharan Africa"
+    },
     "Congo (Kinshasa)": {
         "country_ru": "Киншаса",
         "population": 11855000,
@@ -988,6 +994,12 @@
         "population": 57310019,
         "region": "Africa",
         "subregion": "Sub-Saharan Africa"
+    },
+    "Tajikistan": {
+        "country_ru": "Таджикистан",
+        "population": 8576926,
+        "region": "Asia",
+        "subregion": "Eastern Asia"
     },
     "Thailand": {
         "country_ru": "Таиланд",

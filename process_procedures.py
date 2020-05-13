@@ -79,39 +79,39 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
         ax.set_xlim(xmax=date_forward)
 
 
-def preprocess(args, base_path, cases_file, cases_today_file):
+def preprocess(args, covid_data_path, cases_file, cases_today_file):
     useful_columns = ['Country_Region', 'Last_Update', 'Confirmed', 'Deaths']
     rename_dict = {'Country_Region': 'Place', 'Last_Update': 'Date'}
 
-    cases_raw = pd.read_csv(os.path.join(base_path, cases_file))
+    cases_raw = pd.read_csv(os.path.join(covid_data_path, cases_file))
     # remove USA states
     cases_raw = cases_raw[cases_raw['UID'] != 840]
     cases = pd.DataFrame(cases_raw[useful_columns])
     cases.rename(columns=rename_dict, inplace=True)
     cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
+    cases = cases.groupby(['Date', 'Place']).sum().reset_index()
+    cases = cases.sort_values(by=['Place', 'Date'])
 
+    cases_today_raw = pd.read_csv(os.path.join(covid_data_path, cases_today_file))
+    # remove USA states
+    cases_today_raw = cases_today_raw[cases_today_raw['UID'] != 840]
+    cases_today = pd.DataFrame(cases_today_raw[useful_columns])
+    cases_today.rename(columns=rename_dict, inplace=True)
+    cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
+    cases_today = cases_today.groupby(['Date', 'Place']).sum().reset_index()
+    cases_today = cases_today.sort_values(by=['Place', 'Date'])
+
+    return cases, cases_today
+
+
+def process(args, cases, cases_today, countries_params,
+            plot_file_name=False, use_agg=False):
     if 'World' in set(args.regions):
         world = cases.groupby(['Date']).sum()
         world['Place'] = 'World'
         world['Date'] = world.index
         cases = cases.append(world, ignore_index=True, sort=True)
 
-    if args.current_day or args.forec_current_day:
-        cases_today_raw = pd.read_csv(os.path.join(base_path, cases_today_file))
-        # remove USA states
-        cases_today_raw = cases_today_raw[cases_today_raw['UID'] != 840]
-        cases_today = pd.DataFrame(cases_today_raw[useful_columns])
-        cases_today.rename(columns=rename_dict, inplace=True)
-        cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
-        cases = cases.append(cases_today, ignore_index=True, sort=True)
-
-    cases = cases.groupby(['Date', 'Place']).sum().reset_index()
-    cases = cases.sort_values(by=['Place', 'Date'])
-
-    return cases
-
-
-def process(args, cases, plot_file_name=False, use_agg=False, countries_data=None):
     regions_all = sorted(set(cases['Place'].values.tolist()))
     regions = sorted(list(set(regions_all) & set(args.regions)))
 
@@ -125,8 +125,16 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
         print(regions_all)
         sys.exit(0)
 
-    if not countries_data:
-        countries_data = {r: {'country_ru': r} for r in regions}
+    if args.current_day or args.forec_current_day:
+        cases = cases.append(cases_today, ignore_index=True, sort=True)
+
+    cases = pd.DataFrame(cases[cases['Place'].isin(regions)])
+
+    if args.nonabs:
+        for region in regions:
+            population = countries_params[region]['population']
+            cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] = \
+                cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] / population
 
     if use_agg:
         plt.switch_backend('Agg')
@@ -145,7 +153,7 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
                                              lw=2.1,
                                              color=color, ax=ax, marker='o',
                                              markersize=2.7,
-                                             label=countries_data[region]['country_ru'])
+                                             label=countries_params[region]['country_ru'])
 
         if args.deaths or args.forec_deaths:
             cases[cases['Place'] == region].plot(x='Date', y='Deaths',
@@ -169,9 +177,12 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
     for handle in legend.legendHandles:
         handle.set_linewidth(5.0)
 
-    plt.ylabel('Человек')
+    if args.nonabs:
+        plt.ylabel('Доля населения')
+    else:
+        plt.ylabel('Человек')
+
     plt.xlabel('')
-    ax.set_ylim(bottom=1)
     if args.from_date:
         ax.set_xlim(xmin=args.from_date)
 

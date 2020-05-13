@@ -1,9 +1,10 @@
 import argparse
 import datetime
 import os
+from os import path
+import json
 
 from process_procedures import process, preprocess
-
 
 parser = argparse.ArgumentParser(description='COVID-19 disease daily plotting script',
                                  epilog='Forecast works mostly under manual control, but works '
@@ -34,16 +35,23 @@ parser.add_argument('--regions', type=str, nargs='+', default=['Russia'],
 parser.add_argument("--from_date",
                     type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
                     default=None, help='set init data for plot: Y-m-d')
+parser.add_argument('--nonabs', default=False, action='store_true',
+                    help='set number of people as fraction of population')
 
 args = parser.parse_args()
 
 cwd = os.getcwd()
-base_path = "COVID-19/data"
+covid_data_path = "COVID-19/data"
 cases_file = "cases_time.csv"
 cases_today_file = "cases_country.csv"
 
-if os.path.isdir(base_path):
-    os.chdir(base_path)
+countries_params_path = '.'
+countries_params_file = path.join(countries_params_path, 'data/countries_params.json')
+with open(countries_params_file, 'r', encoding='utf-8') as f:
+    countries_params = json.load(f)
+
+if os.path.isdir(covid_data_path):
+    os.chdir(covid_data_path)
     os.system("git pull")
     os.chdir(cwd)
 else:
@@ -52,5 +60,5 @@ else:
     os.system("git checkout web-data")
     os.chdir("..")
 
-cases = preprocess(args, base_path, cases_file, cases_today_file)
-process(args, cases)
+cases, cases_today = preprocess(args, covid_data_path, cases_file, cases_today_file)
+process(args, cases, cases_today, countries_params)
