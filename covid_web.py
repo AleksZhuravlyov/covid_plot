@@ -43,7 +43,7 @@ all_countries.insert(len(all_countries), all_countries.pop(d_pos))
 def show_plot():
     chosen_countries = []
     log = True
-    abs = False
+    abs = True
     deaths = True
     daily = True
     current_day = False
