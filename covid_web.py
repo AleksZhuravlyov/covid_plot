@@ -7,7 +7,7 @@ from os import path
 from types import SimpleNamespace
 from flask import render_template, Blueprint
 from flask import request
-from covid_plot import process, preprocess
+from process_procedures import process, preprocess
 import hashlib
 
 
