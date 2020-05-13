@@ -128,7 +128,17 @@ def process(args, cases, cases_today, countries_params,
     if args.current_day or args.forec_current_day:
         cases = cases.append(cases_today, ignore_index=True, sort=True)
 
+    # drop places which are not selected
     cases = pd.DataFrame(cases[cases['Place'].isin(regions)])
+
+    for region in regions:
+        cases.loc[cases['Place'] == region, 'Confirmed_daily'] = \
+            cases.loc[cases['Place'] == region, 'Confirmed'].diff()
+        cases.loc[cases['Place'] == region, 'Deaths_daily'] = \
+            cases.loc[cases['Place'] == region, 'Deaths'].diff()
+
+    cases['Confirmed_daily'].fillna(cases['Confirmed'], inplace=True)
+    cases['Deaths_daily'].fillna(cases['Deaths'], inplace=True)
 
     if args.nonabs:
         for region in regions:
@@ -136,58 +146,74 @@ def process(args, cases, cases_today, countries_params,
             cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] = \
                 cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] / population
 
+    print(cases)
+
     if use_agg:
         plt.switch_backend('Agg')
 
-    fig, ax = plt.subplots()
-    plt.title('Подтвержденные случаи')
+    fig, ax1 = plt.subplots()
+    plt.title('Подтвержденные (—)')
+    if args.daily:
+        plt.title(ax1.get_title() + ' и новые (▪)')
+    plt.title(ax1.get_title() + ' случаи')
     if args.deaths or args.forec_deaths:
-        plt.title(ax.get_title() + ' (—) и смерти (---)')
+        plt.title(ax1.get_title() + ', смерти (---)')
 
     for region in regions:
         # plot region
 
-        color = next(ax._get_lines.prop_cycler)['color']
+        color = next(ax1._get_lines.prop_cycler)['color']
 
         cases[cases['Place'] == region].plot(x='Date', y='Confirmed', linestyle='-',
                                              lw=2.1,
-                                             color=color, ax=ax, marker='o',
+                                             color=color, ax=ax1, marker='o',
                                              markersize=2.7,
                                              label=countries_params[region]['country_ru'])
+
+        if args.daily:
+            ax2 = cases[cases['Place'] == region].plot(x='Date', y='Confirmed_daily',
+                                                       linestyle='-',
+                                                       secondary_y=True,
+                                                       lw=0.3,
+                                                       color=color, ax=ax1, marker='s',
+                                                       markersize=4)
 
         if args.deaths or args.forec_deaths:
             cases[cases['Place'] == region].plot(x='Date', y='Deaths',
                                                  linestyle='--', lw=2.1, color=color,
-                                                 ax=ax, label='', marker=2,
+                                                 ax=ax1, label='', marker=2,
                                                  markersize=3.5)
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
             forecast(args.forec_confirmed, cases[cases['Place'] == region],
-                     field_name='Confirmed', ax=ax, color=color,
+                     field_name='Confirmed', ax=ax1, color=color,
                      forec_current_day=args.forec_current_day)
 
         # forecast and plot deaths
         if args.forec_deaths:
             forecast(args.forec_deaths, cases[cases['Place'] == region],
-                     field_name='Deaths', ax=ax, color=color,
+                     field_name='Deaths', ax=ax1, color=color,
                      forec_current_day=args.forec_current_day)
 
-    legend = ax.legend()
+    legend = ax1.legend()
     for handle in legend.legendHandles:
         handle.set_linewidth(5.0)
 
     if args.nonabs:
-        plt.ylabel('Доля населения')
+        ax1.set_ylabel('Всего (доля населения)')
     else:
-        plt.ylabel('Человек')
+        ax1.set_ylabel('Всего (человек)')
+
+    if args.daily:
+        ax2.set_ylabel('Новые случаи (человек)')
 
     plt.xlabel('')
     if args.from_date:
-        ax.set_xlim(xmin=args.from_date)
+        ax1.set_xlim(xmin=args.from_date)
 
     if not args.nonlog:
-        plt.yscale('log')
+        ax1.set_yscale('log')
 
     plt.grid(True)
 

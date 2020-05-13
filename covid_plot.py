@@ -37,6 +37,8 @@ parser.add_argument("--from_date",
                     default=None, help='set init data for plot: Y-m-d')
 parser.add_argument('--nonabs', default=False, action='store_true',
                     help='set number of people as fraction of population')
+parser.add_argument('--daily', default=False, action='store_true',
+                    help='show daily data')
 
 args = parser.parse_args()
 

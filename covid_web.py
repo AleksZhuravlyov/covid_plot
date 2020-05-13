@@ -45,6 +45,7 @@ def show_plot():
     log = True
     abs = False
     deaths = True
+    daily = True
     current_day = False
     from_date = "2020-03-01"
     forec_confirmed = []
@@ -85,7 +86,7 @@ def show_plot():
                                from_date=from_date, nonlog=nonlog,
                                regions=chosen_countries,
                                forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
-                               forec_current_day=[], nonabs=nonabs)
+                               forec_current_day=[], nonabs=nonabs, daily=daily)
         cases, cases_today = preprocess(args, base_path, cases_file, cases_today_file)
 
         # Creating unique filename for the plot
