@@ -11,7 +11,7 @@ def func_linear(x, a, b):
 
 
 def func_poly(x, a, b, c, d):
-    return a * x**3 + b * x**2 + c * x + d
+    return a * x ** 3 + b * x ** 2 + c * x + d
 
 
 def func_covid(x, a, b, c, d):
@@ -80,18 +80,14 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
 
 
 def preprocess(args, base_path, cases_file, cases_today_file):
+    useful_columns = ['Country_Region', 'Last_Update', 'Confirmed', 'Deaths']
     rename_dict = {'Country_Region': 'Place', 'Last_Update': 'Date'}
-    drop_list_cases_today = ['Lat', 'Long_', 'Active', 'Recovered',  'Incident_Rate',
-                             'People_Tested', 'People_Hospitalized', 'Mortality_Rate',
-                             'UID', 'ISO3']
-    drop_list_cases = ['Active', 'Delta_Confirmed', 'Delta_Recovered', 'Recovered',
-                       'Incident_Rate', 'People_Tested', 'People_Hospitalized', 'Province_State',
-                       'FIPS', 'UID', 'iso3', 'Report_Date_String']
 
-    cases = pd.read_csv(os.path.join(base_path, cases_file))
+    cases_raw = pd.read_csv(os.path.join(base_path, cases_file))
+    # remove USA states
+    cases_raw = cases_raw[cases_raw['UID'] != 840]
+    cases = pd.DataFrame(cases_raw[useful_columns])
     cases.rename(columns=rename_dict, inplace=True)
-    cases = cases[cases['UID'] != 840]
-    cases = cases.drop(columns=drop_list_cases)
     cases['Date'] = pd.to_datetime(cases['Date']).dt.normalize()
 
     if 'World' in set(args.regions):
@@ -101,10 +97,11 @@ def preprocess(args, base_path, cases_file, cases_today_file):
         cases = cases.append(world, ignore_index=True, sort=True)
 
     if args.current_day or args.forec_current_day:
-        cases_today = pd.read_csv(os.path.join(base_path, cases_today_file))
+        cases_today_raw = pd.read_csv(os.path.join(base_path, cases_today_file))
+        # remove USA states
+        cases_today_raw = cases_today_raw[cases_today_raw['UID'] != 840]
+        cases_today = pd.DataFrame(cases_today_raw[useful_columns])
         cases_today.rename(columns=rename_dict, inplace=True)
-        cases_today = cases_today[cases_today['UID'] != 840]
-        cases_today = cases_today.drop(columns=drop_list_cases_today)
         cases_today['Date'] = pd.to_datetime(cases_today['Date']) - np.timedelta64(1, 'D')
         cases = cases.append(cases_today, ignore_index=True, sort=True)
 
@@ -144,15 +141,17 @@ def process(args, cases, plot_file_name=False, use_agg=False, countries_data=Non
 
         color = next(ax._get_lines.prop_cycler)['color']
 
-        cases[cases['Place'] == region].plot(x='Date', y='Confirmed', linestyle='-', lw=2.1,
-                                              color=color, ax=ax, marker='o', markersize=2.7,
-                                              label=countries_data[region]['country_ru'])
+        cases[cases['Place'] == region].plot(x='Date', y='Confirmed', linestyle='-',
+                                             lw=2.1,
+                                             color=color, ax=ax, marker='o',
+                                             markersize=2.7,
+                                             label=countries_data[region]['country_ru'])
 
         if args.deaths or args.forec_deaths:
             cases[cases['Place'] == region].plot(x='Date', y='Deaths',
-                                                  linestyle='--', lw=2.1, color=color,
-                                                  ax=ax, label='', marker=2,
-                                                  markersize=3.5)
+                                                 linestyle='--', lw=2.1, color=color,
+                                                 ax=ax, label='', marker=2,
+                                                 markersize=3.5)
 
         # forecast and plot confirmed cases
         if args.forec_confirmed:
