@@ -19,7 +19,7 @@ def func_covid(x, a, b, c, d):
     return (a * x + b) * np.exp(c / x + d)
 
 
-def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDaily):
+def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDaily, nonabs, population):
     # set function type for curve fitting
 
     func_type = forec_args[0]
@@ -89,7 +89,15 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDail
 
         Confirmed_current = df.loc[df.Date == df.Date.max()]['Confirmed'].values[0]
         Deaths_current = df.loc[df.Date == df.Date.max()]['Deaths'].values[0]
-        df.drop(df[df.Confirmed < 10000].index, inplace=True)
+        if nonabs:
+            Confirmed_current *= population
+            Deaths_current *= population
+
+        limit = 10000.
+        if nonabs:
+            limit /= population
+
+        df.drop(df[df.Confirmed < limit].index, inplace=True)
         df.drop(columns=['Place', 'Confirmed', 'Deaths'], inplace=True)
         date_time = pd.to_datetime(df.pop('Date'), format='%Y.%m.%d')
 
@@ -119,6 +127,9 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDail
         prediction_df = prediction_df * std + mean
         prediction_df['Confirmed'] = prediction_df['Confirmed_daily'].cumsum() + Confirmed_current
         prediction_df['Deaths'] = prediction_df['Deaths_daily'].cumsum() + Deaths_current
+        if nonabs:
+            prediction_df['Confirmed'] /= population
+            prediction_df['Deaths'] /= population
 
         prediction_df.plot(y=field_name, linestyle=linestyle, lw=lw, color=color,
                            ax=ax, label='', marker=marker, markersize=markersize)
@@ -192,11 +203,13 @@ def process(args, cases, cases_today, countries_params,
 
     # cases.to_csv('cases_tmp.csv', index=False)
 
+    populations = {}
+    for region in regions:
+        populations[region] = countries_params[region]['population']
     if args.nonabs:
         for region in regions:
-            population = countries_params[region]['population']
             cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] = \
-                cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] / population
+                cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] / populations[region]
 
     if use_agg:
         plt.switch_backend('Agg')
@@ -238,13 +251,15 @@ def process(args, cases, cases_today, countries_params,
         if args.forec_confirmed:
             forecast(args.forec_confirmed, cases[cases['Place'] == region],
                      field_name='Confirmed', ax=ax1, color=color,
-                     forec_current_day=args.forec_current_day, isDaily=args.daily)
+                     forec_current_day=args.forec_current_day, isDaily=args.daily,
+                     nonabs=args.nonabs, population=populations[region])
 
         # forecast and plot deaths
         if args.forec_deaths:
             forecast(args.forec_deaths, cases[cases['Place'] == region],
                      field_name='Deaths', ax=ax1, color=color,
-                     forec_current_day=args.forec_current_day, isDaily=args.daily)
+                     forec_current_day=args.forec_current_day, isDaily=args.daily,
+                     nonabs=args.nonabs, population=populations[region])
 
     legend = ax1.legend()
     for handle in legend.legendHandles:
