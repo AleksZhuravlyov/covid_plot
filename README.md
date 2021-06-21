@@ -12,4 +12,6 @@ Draws plots of the number of confirmed cases and deaths from coronavirus disease
 
 ```python3 covid_plot.py --regions Italy France --forec_confirmed exp 7 20 --from_date 2020-02-01```
 
-```python3 covid_plot.py --regions Italy France --nonlog --forec_confirmed exp 7 20 --forec_deaths poly 5 10```
+```python3 covid_plot.py --regions Italy France --nonlog --forec_confirmed cnn 7 20 --forec_deaths poly 5 10```
+
+```python3 covid_plot.py --regions Russia World --forec_confirmed poly 25 10 --forec_deaths poly 17 10```

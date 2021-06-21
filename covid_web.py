@@ -23,8 +23,7 @@ cases_today_file = "cases_country.csv"
 with open(countries_file, 'r', encoding='utf-8') as f:
     countries_data = json.load(f)
 
-all_countries = [el[0] for el in
-                 sorted(countries_data.items(), key=lambda x: x[1]['country_ru'])]
+all_countries = [el[0] for el in sorted(countries_data.items(), key=lambda x: x[1]['country_ru'])]
 
 w_pos = all_countries.index('World')
 all_countries.insert(0, all_countries.pop(w_pos))
@@ -43,9 +42,9 @@ all_countries.insert(len(all_countries), all_countries.pop(d_pos))
 def show_plot():
     chosen_countries = []
     log = True
-    abs = True
-    deaths = True
     daily = True
+    nonabs = False
+    deaths = True
     current_day = False
     from_date = "2020-03-01"
     forec_confirmed = []
@@ -53,6 +52,8 @@ def show_plot():
     if request.method == 'POST':
         chosen_countries = request.form.getlist('country')
         log = request.form.get('log')
+        daily = request.form.get('daily')
+        nonabs = request.form.get('nonabs')
         deaths = request.form.get('deaths')
         current_day = request.form.get('current_day')
         from_date = request.form.get('from_date')
@@ -74,10 +75,6 @@ def show_plot():
         nonlog = False
         if not log:
             nonlog = True
-
-        nonabs = False
-        if not abs:
-            nonabs = True
 
         if set(chosen_countries) - set(all_countries):
             return render_template("covid.html", error="Выберите страны из списка!",
@@ -107,10 +104,12 @@ def show_plot():
                                chosen_countries=chosen_countries,
                                log=log, deaths=deaths, current_day=current_day,
                                from_date=from_date,
-                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)
+                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
+                               nonabs=nonabs, daily=daily)
     else:
         return render_template("covid.html", countries=all_countries,
                                countries_data=countries_data,
                                chosen_countries=chosen_countries, log=log, deaths=deaths,
                                current_day=current_day, from_date=from_date,
-                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths)
+                               forec_confirmed=forec_confirmed, forec_deaths=forec_deaths,
+                               nonabs=nonabs, daily=daily)

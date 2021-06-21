@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
+from cnn_forecast_methods import fit_model
 
 
 def func_linear(x, a, b):
@@ -18,7 +19,7 @@ def func_covid(x, a, b, c, d):
     return (a * x + b) * np.exp(c / x + d)
 
 
-def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
+def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDaily):
     # set function type for curve fitting
 
     func_type = forec_args[0]
@@ -28,62 +29,111 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day):
         func = func_poly
     elif func_type == 'covid':
         func = func_covid
-    else:
+    elif func_type != 'cnn':
         print('No such function type, use covid, poly or linear', file=sys.stderr)
         sys.exit(-1)
 
-    forward = np.timedelta64(int(forec_args[1]), 'D')
-    backward = np.timedelta64(int(forec_args[2]), 'D')
-
-    # import time, confirmed cases and deaths form pandas to numpy
-    date = cases.Date.to_numpy()
-    value = cases[field_name].to_numpy()
-
-    # trim data for particular purposes of forecast
-    date_current = date[-1]
-    date_forward = date_current + forward
-    date_backward = date_current - backward
-
-    date_range_forecast = np.arange(date_backward, date_forward, dtype='datetime64[D]')
-    ax.set_xlim(xmax=date_forward)
-
-    # set time frame for curve fitting for confirmed cases
-    backward_condition = date > date_backward
-    if not forec_current_day:
-        backward_condition[-1] = False  # the last day is not use since can be non filled
-    date_range_fitting = date[backward_condition]
-    value = value[backward_condition]
-
-    # employ numpy curve fitting for forecast
-    popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float),
-                           value,
-                           maxfev=int(1.e+9))
-
-    # plot forecast
-    forecast_value = pd.DataFrame()
-    forecast_value['Date'] = date_range_forecast.astype('datetime64[ns]')
-    forecast_value[field_name] = func(
-        date_range_forecast.astype('datetime64[D]').astype(int),
-        *popt)
-    forecast_value.Date = forecast_value.Date.dt.normalize()
-
+    lw = 1.05
+    marker = 'o'
+    markersize = 1.35
     linestyle = '-'
     if field_name == 'Deaths':
         linestyle = '--'
+        lw = 1.05
+        marker = 2.
+        markersize = 1.75
 
-    forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=1, color=color,
-                        ax=ax,
-                        label='')
+    if func_type != 'cnn':
+        forward = np.timedelta64(int(forec_args[1]), 'D')
+        backward = np.timedelta64(int(forec_args[2]), 'D')
 
-    if np.datetime64(int(ax.get_xlim()[1]), 'D') < date_forward:
+        # import time, confirmed cases and deaths form pandas to numpy
+        date = cases.Date.to_numpy()
+        value = cases[field_name].to_numpy()
+
+        # trim data for particular purposes of forecast
+        date_current = date[-1]
+        date_forward = date_current + forward
+        date_backward = date_current - backward
+
+        date_range_forecast = np.arange(date_backward, date_forward, dtype='datetime64[D]')
         ax.set_xlim(xmax=date_forward)
+
+        # set time frame for curve fitting for confirmed cases
+        backward_condition = date > date_backward
+        if not forec_current_day:
+            backward_condition[-1] = False  # the last day is not use since can be non filled
+        date_range_fitting = date[backward_condition]
+        value = value[backward_condition]
+
+        # employ numpy curve fitting for forecast
+        popt, pcov = curve_fit(func, date_range_fitting.astype('datetime64[D]').astype(float),
+                               value, maxfev=int(1.e+9))
+
+        # plot forecast
+        forecast_value = pd.DataFrame()
+        forecast_value['Date'] = date_range_forecast.astype('datetime64[ns]')
+        forecast_value[field_name] = func(
+            date_range_forecast.astype('datetime64[D]').astype(int), *popt)
+        forecast_value.Date = forecast_value.Date.dt.normalize()
+
+        forecast_value.plot(x='Date', y=field_name, linestyle=linestyle, lw=lw, color=color,
+                            ax=ax, label='', marker=marker, markersize=markersize)
+
+        if np.datetime64(int(ax.get_xlim()[1]), 'D') < date_forward:
+            ax.set_xlim(xmax=date_forward)
+    else:
+        df = cases.copy(deep=True)
+        if not forec_current_day:
+            df.drop(df[df.Date == df.Date.max()].index, inplace=True)
+
+        Confirmed_current = df.loc[df.Date == df.Date.max()]['Confirmed'].values[0]
+        Deaths_current = df.loc[df.Date == df.Date.max()]['Deaths'].values[0]
+        df.drop(df[df.Confirmed < 10000].index, inplace=True)
+        df.drop(columns=['Place', 'Confirmed', 'Deaths'], inplace=True)
+        date_time = pd.to_datetime(df.pop('Date'), format='%Y.%m.%d')
+
+        train_df = df[0:int(len(df) * 0.7)]
+        val_df = df[int(len(df) * 0.7):int(len(df) * 0.9)]
+        test_df = df[int(len(df) * 0.9):]
+        mean = train_df.mean()
+        std = train_df.std()
+        df = (df - mean) / std
+        train_df = (train_df - mean) / std
+        val_df = (val_df - mean) / std
+        test_df = (test_df - mean) / std
+
+        IN_STEPS = int(forec_args[2])
+        OUT_STEPS = int(forec_args[1])
+
+        model, window = fit_model(train_df, val_df, test_df, IN_STEPS, OUT_STEPS)
+
+        prediction = model(np.array([df[- OUT_STEPS:]]))
+        prediction_df = pd.DataFrame(prediction.numpy()[0])
+        prediction_df.columns = df.columns
+        df.index = date_time
+        time_max = date_time[-OUT_STEPS:].max()
+        prediction_time = pd.date_range(time_max, periods=OUT_STEPS + 1, freq="D")
+        prediction_time = prediction_time.drop(time_max)
+        prediction_df.index = prediction_time
+        prediction_df = prediction_df * std + mean
+        prediction_df['Confirmed'] = prediction_df['Confirmed_daily'].cumsum() + Confirmed_current
+        prediction_df['Deaths'] = prediction_df['Deaths_daily'].cumsum() + Deaths_current
+
+        prediction_df.plot(y=field_name, linestyle=linestyle, lw=lw, color=color,
+                           ax=ax, label='', marker=marker, markersize=markersize)
+
+        if isDaily and field_name == 'Confirmed':
+            prediction_df.plot(y=field_name + '_daily', secondary_y=True, linestyle='-', lw=0.15, color=color,
+                               ax=ax, label='', marker='s', markersize=2)
 
 
 def preprocess(args, covid_data_path, cases_file, cases_today_file):
     useful_columns = ['Country_Region', 'Last_Update', 'Confirmed', 'Deaths']
     rename_dict = {'Country_Region': 'Place', 'Last_Update': 'Date'}
 
-    cases_raw = pd.read_csv(os.path.join(covid_data_path, cases_file))
+    cases_raw = pd.read_csv(os.path.join(covid_data_path, cases_file), low_memory=False)
+
     # remove USA states
     cases_raw = cases_raw[cases_raw['UID'] != 840]
     cases = pd.DataFrame(cases_raw[useful_columns])
@@ -140,13 +190,13 @@ def process(args, cases, cases_today, countries_params,
     cases['Confirmed_daily'].fillna(cases['Confirmed'], inplace=True)
     cases['Deaths_daily'].fillna(cases['Deaths'], inplace=True)
 
+    # cases.to_csv('cases_tmp.csv', index=False)
+
     if args.nonabs:
         for region in regions:
             population = countries_params[region]['population']
             cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] = \
                 cases.loc[cases['Place'] == region, ['Confirmed', 'Deaths']] / population
-
-    print(cases)
 
     if use_agg:
         plt.switch_backend('Agg')
@@ -188,13 +238,13 @@ def process(args, cases, cases_today, countries_params,
         if args.forec_confirmed:
             forecast(args.forec_confirmed, cases[cases['Place'] == region],
                      field_name='Confirmed', ax=ax1, color=color,
-                     forec_current_day=args.forec_current_day)
+                     forec_current_day=args.forec_current_day, isDaily=args.daily)
 
         # forecast and plot deaths
         if args.forec_deaths:
             forecast(args.forec_deaths, cases[cases['Place'] == region],
                      field_name='Deaths', ax=ax1, color=color,
-                     forec_current_day=args.forec_current_day)
+                     forec_current_day=args.forec_current_day, isDaily=args.daily)
 
     legend = ax1.legend()
     for handle in legend.legendHandles:

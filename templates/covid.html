@@ -24,15 +24,17 @@
                                         {% endfor %}
                                 </select>
                         </div>
-                        <!-- <div class="form-group form-check">
-                                <label><input class="form-check-input" type="checkbox" checked name="log" value="log" id="log">Логарифмическая шкала</label>
-                                <label><input class="form-check-input" type="checkbox" name="deaths" value="deaths" id="deaths" checked>Показывать число умерших</label>
-                                <label><input class="form-check-input" type="checkbox" name="current-day" value="current-day" id="current-day">Использовать данные о сегодняшнем дне</label>
-                                <label class="form-check-label" for="log">Логарифмическая шкала</label>
-                        </div> -->
                         <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" {% if log %} checked {% endif %} name="log" value="log" id="log">
                                 <label class="custom-control-label" for="log"><small>Логарифмическая шкала</small></label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" {% if daily %} checked {% endif %} name="daily" value="daily" id="daily">
+                                <label class="custom-control-label" for="daily"><small>Новые случаи</small></label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" {% if nonabs %} checked {% endif %} name="nonabs" value="nonabs" id="nonabs">
+                                <label class="custom-control-label" for="nonabs"><small>Количество случаев отнесено к численности населения</small></label>
                         </div>
                         <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" {% if deaths %} checked {% endif %} name="deaths" value="deaths" id="deaths">
@@ -55,26 +57,26 @@
                                                 <input class="custom-control-input js-forec-confirmed" type="checkbox" name="forec-confirmed" value="forec-confirmed" {% if forec_confirmed %} checked {% endif %} id="forec-confirmed">
                                                 <label class="custom-control-label" for="forec-confirmed"><small class="font-weight-bold">Экстраполировать число подтвержденных случаев</small></label>
                                         </div>
-                                        <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
+                                        <p class="mb-1"><small>Способ прогнозирования</small></p>
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if not forec_confirmed or forec_confirmed and forec_confirmed[0]=="linear" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="linear" value="linear" name="confirmed_function">
-                                                <label class="custom-control-label" for="linear"><small>Линейная</small></label>
+                                                <label class="custom-control-label" for="linear"><small>Экстраполяция линейной функцией</small></label>
                                         </div>
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="poly" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="poly" value="poly" name="confirmed_function">
-                                                <label class="custom-control-label" for="poly"><small>Полиномиальная</small></label>
+                                                <label class="custom-control-label" for="poly"><small>Экстраполяция полиномиальной функцией</small></label>
                                         </div>
-                                        <!-- <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="covid" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="covid" value="covid" name="confirmed_function">
-                                                <label class="custom-control-label" for="covid"><small>Covid</small></label>
-                                        </div> -->
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="cnn" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="cnn" value="cnn" name="confirmed_function">
+                                                <label class="custom-control-label" for="cnn"><small>Свёрточная нейронная сеть</small></label>
+                                        </div>
                                         <div class="form-group form-row align-items-center">
-                                                <label class="col-auto mb-0" for="for_period_confirmed"><small>Экстраполировать вперёд на</small></label>
+                                                <label class="col-auto mb-0" for="for_period_confirmed"><small>Прогнозировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_confirmed %} value="{{forec_confirmed[1]}}" {% endif %}  {% if not forec_confirmed %} disabled {% endif %} name="for_period_confirmed" id="for_period_confirmed" value="7" placeholder="7" min="3">
                                                 <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                         <div class="form-group form-row align-items-center">
-                                                <label class="col-auto mb-0" for="on_period_confirmed"><small>Экстраполировать на основе последних</small></label>
+                                                <label class="col-auto mb-0" for="on_period_confirmed"><small>Прогнозировать на основе последних</small></label>
                                                 <input class="form-control col js-on-period" type="number"  {% if forec_confirmed %} value="{{forec_confirmed[2]}}" {% endif %} {% if not forec_confirmed %} disabled {% endif %} name="on_period_confirmed" id="on_period_confirmed" value="7" placeholder="7" min='4'>
                                                 <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
@@ -82,28 +84,28 @@
                                 <div class="forec-deaths js-forec-deaths-block mb-4 mt-4">
                                         <div class="custom-control custom-checkbox mb-2">
                                                 <input class="custom-control-input js-forec-deaths" type="checkbox" name="forec-deaths" value="forec-deaths"  {% if forec_deaths %} checked {% endif %}  id="forec-deaths">
-                                                <label class="custom-control-label" for="forec-deaths"><small class="font-weight-bold">Экстраполировать число умерших</small></label>
+                                                <label class="custom-control-label" for="forec-deaths"><small class="font-weight-bold">Прогнозировать число умерших</small></label>
                                         </div>
-                                        <p class="mb-1"><small>Тип экстраполяционной функции</small></p>
+                                        <p class="mb-1"><small>Способ прогнозирования</small></p>
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if not forec_deaths or forec_deaths and forec_deaths[0]=="linear" %} checked {% endif %} {% if not forec_deaths %} disabled {% endif %} id="linear2" value="linear" name="deaths_function">
-                                                <label class="custom-control-label" for="linear2"><small>Линейная</small></label>
+                                                <label class="custom-control-label" for="linear2"><small>Экстраполяция линейной функцией</small></label>
                                         </div>
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="poly" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="poly2" value="poly" name="deaths_function">
-                                                <label class="custom-control-label" for="poly2"><small>Полиномиальная</small></label>
+                                                <label class="custom-control-label" for="poly2"><small>Экстраполяция полиномиальной функцией</small></label>
                                         </div>
-                                        <!-- <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="covid" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="covid2" value="covid" name="deaths_function">
-                                                <label class="custom-control-label" for="covid2"><small>Covid</small></label>
-                                        </div> -->
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="cnn" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="cnn2" value="cnn" name="deaths_function">
+                                                <label class="custom-control-label" for="cnn2"><small>Свёрточная нейронная сеть</small></label>
+                                        </div>
                                         <div class="form-group form-row align-items-center">
-                                                <label class="col-auto mb-0" for="for_period_deaths"><small>Экстраполировать вперёд на</small></label>
+                                                <label class="col-auto mb-0" for="for_period_deaths"><small>Прогнозировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_deaths %} value="{{forec_deaths[1]}}" {% endif %} {% if not forec_deaths %} disabled {% endif %} name="for_period_deaths" id="for_period_deaths" value="7" placeholder="7" min="3">
                                                 <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>
                                         <div class="form-group form-row align-items-center">
-                                                <label class="col-auto mb-0" for="on_period_deaths"><small>Экстраполировать на основе последних</small></label>
+                                                <label class="col-auto mb-0" for="on_period_deaths"><small>Прогнозировать на основе последних</small></label>
                                                 <input class="form-control col js-on-period" type="number"  {% if forec_deaths %} value="{{forec_deaths[2]}}" {% endif %} {% if not forec_deaths %} disabled {% endif %} name="on_period_deaths" id="on_period_deaths" value="7" placeholder="7" min='4'>
                                                 <span class="ml-1"><small class='js-period-label'>дней</small></span>
                                         </div>

@@ -8,10 +8,11 @@ from process_procedures import process, preprocess
 
 parser = argparse.ArgumentParser(description='COVID-19 disease daily plotting script',
                                  epilog='Forecast works mostly under manual control, but works '
-                                        'and the corresponding fitting functions are '
+                                        'and the corresponding fitting approaches are '
                                         'as follows: '
                                         'linear=a*x+b, poly=a*x^3+b*x^2+c*x+d and '
-                                        'covid=(a*x+b)*exp(c/x+d).',
+                                        'covid=(a*x+b)*exp(c/x+d) and '
+                                        'cnn is preconfigured convolutional neural network',
                                  prog='covid_plot')
 
 parser.add_argument('--nonlog', default=False, action='store_true',
@@ -25,7 +26,7 @@ parser.add_argument('--current_day', default=False, action='store_true',
 parser.add_argument('--deaths', default=False, action='store_true',
                     help='show deaths')
 parser.add_argument('--forec_confirmed', type=str, nargs='+', default=[],
-                    help='set function type (linear, poly or covid), '
+                    help='set function type (linear, poly, covid or cnn), '
                          'forward and backward days for forecast confirmed cases: type n n')
 parser.add_argument('--forec_deaths', type=str, nargs='+', default=[],
                     help='set function type (linear, poly or covid), '
