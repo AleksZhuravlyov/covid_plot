@@ -70,6 +70,10 @@
                                                 <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="cnn" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="cnn" value="cnn" name="confirmed_function">
                                                 <label class="custom-control-label" for="cnn"><small>Свёрточная нейронная сеть</small></label>
                                         </div>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_confirmed and forec_confirmed[0]=="ldm" %} checked {% endif %} {% if not forec_confirmed %} disabled {% endif %} id="ldm" value="ldm" name="confirmed_function">
+                                                <label class="custom-control-label" for="ldm"><small>Линейная модель с dense слоем</small></label>
+                                        </div>
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="for_period_confirmed"><small>Прогнозировать вперёд на</small></label>
                                                 <input class="form-control col js-for-period" type="number" {% if forec_confirmed %} value="{{forec_confirmed[1]}}" {% endif %}  {% if not forec_confirmed %} disabled {% endif %} name="for_period_confirmed" id="for_period_confirmed" value="7" placeholder="7" min="3">
@@ -98,6 +102,10 @@
                                         <div class="custom-control custom-radio">
                                                 <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="cnn" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="cnn2" value="cnn" name="deaths_function">
                                                 <label class="custom-control-label" for="cnn2"><small>Свёрточная нейронная сеть</small></label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" {% if forec_deaths and forec_deaths[0]=="ldm" %} checked {% endif %}  {% if not forec_deaths %} disabled {% endif %} id="ldm2" value="ldm" name="deaths_function">
+                                                <label class="custom-control-label" for="ldm2"><small>Линейная модель с dense слоем</small></label>
                                         </div>
                                         <div class="form-group form-row align-items-center">
                                                 <label class="col-auto mb-0" for="for_period_deaths"><small>Прогнозировать вперёд на</small></label>

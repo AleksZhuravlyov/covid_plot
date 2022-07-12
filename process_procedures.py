@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
-from cnn_forecast_methods import fit_model
+import cnn_forecast_methods  as cnn
+import ldm_forecast_methods as ldm
 
 
 def func_linear(x, a, b):
@@ -29,7 +30,7 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDail
         func = func_poly
     elif func_type == 'covid':
         func = func_covid
-    elif func_type != 'cnn':
+    elif func_type != 'cnn' and func_type != 'ldm':
         print('No such function type, use covid, poly or linear', file=sys.stderr)
         sys.exit(-1)
 
@@ -43,7 +44,7 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDail
         marker = 2.
         markersize = 1.75
 
-    if func_type != 'cnn':
+    if func_type != 'cnn' and func_type != 'ldm':
         forward = np.timedelta64(int(forec_args[1]), 'D')
         backward = np.timedelta64(int(forec_args[2]), 'D')
 
@@ -113,8 +114,11 @@ def forecast(forec_args, cases, field_name, ax, color, forec_current_day, isDail
 
         IN_STEPS = int(forec_args[2])
         OUT_STEPS = int(forec_args[1])
-
-        model, window = fit_model(train_df, val_df, test_df, IN_STEPS, OUT_STEPS)
+        
+        if func_type == 'cnn':
+            model, window = cnn.fit_model(train_df, val_df, test_df, IN_STEPS, OUT_STEPS)
+        elif func_type == 'ldm':
+            model, window = ldm.fit_model(train_df, val_df, test_df, IN_STEPS, OUT_STEPS)
 
         prediction = model(np.array([df[- OUT_STEPS:]]))
         prediction_df = pd.DataFrame(prediction.numpy()[0])
